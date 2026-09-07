@@ -49,12 +49,12 @@ npm run preview
 1. En `astro.config.mjs`, reemplazar los placeholders por los valores reales:
 
    ```js
-   site: 'https://<usuario>.github.io',
-   base: '/<repo>',
+   site: 'https://tu-usuario.github.io',
+   base: '/tu-repo',
    ```
 
 2. En `public/robots.txt`, actualizar la URL del `Sitemap` con el mismo
-   `usuario`/`repo`.
+   usuario/repo.
 3. Configurar un workflow de GitHub Actions (`.github/workflows/deploy.yml`)
    que corra `npm ci && npm run build` y publique `dist/` con
    `actions/deploy-pages`, o habilitar el build automático de Pages con

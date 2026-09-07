@@ -9,12 +9,19 @@
   externa adicional en el arranque de la página.
 */
 
+/*
+  Rutas relativas a este archivo (no absolutas): así Vite las trata como
+  módulos, las copia a dist/_astro/ con hash y reescribe la URL con el
+  `base` del sitio incluido. Una ruta absoluta tipo `/fonts/...` se rompe en
+  cuanto el sitio se publica bajo un subdirectorio (GitHub Pages).
+*/
+
 @font-face {
   font-family: 'Manrope';
   font-style: normal;
   font-weight: 300;
   font-display: swap;
-  src: url('/fonts/manrope-300.woff2') format('woff2');
+  src: url('../assets/fonts/manrope-300.woff2') format('woff2');
 }
 
 @font-face {
@@ -22,7 +29,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/manrope-400.woff2') format('woff2');
+  src: url('../assets/fonts/manrope-400.woff2') format('woff2');
 }
 
 @font-face {
@@ -30,7 +37,7 @@
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('/fonts/manrope-600.woff2') format('woff2');
+  src: url('../assets/fonts/manrope-600.woff2') format('woff2');
 }
 
 @font-face {
@@ -38,5 +45,5 @@
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('/fonts/manrope-700.woff2') format('woff2');
+  src: url('../assets/fonts/manrope-700.woff2') format('woff2');
 }
