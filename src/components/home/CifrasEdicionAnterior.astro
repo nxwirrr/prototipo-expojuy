@@ -1,0 +1,76 @@
+---
+const cifras = [
+  { valor: '120+', etiqueta: 'empresas expositoras' },
+  { valor: '15', etiqueta: 'países participantes' },
+  { valor: '3.200', etiqueta: 'visitantes' },
+  { valor: '180', etiqueta: 'rondas de negocios concretadas' },
+];
+---
+
+<section class="contenedor cifras" aria-labelledby="titulo-cifras">
+  <h2 id="titulo-cifras">La edición anterior, en números</h2>
+  <div class="cifras__grilla">
+    {cifras.map((c) => (
+      <div class="cifras__item">
+        <span class="cifras__valor">{c.valor}</span>
+        <span class="cifras__etiqueta">{c.etiqueta}</span>
+      </div>
+    ))}
+  </div>
+  <p class="cifras__nota">Cifras de muestra, ilustrativas para este prototipo.</p>
+</section>
+
+<style>
+  .cifras {
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .cifras h2 {
+    margin-bottom: var(--space-6);
+  }
+
+  .cifras__grilla {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+  }
+
+  .cifras__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding-left: var(--space-4);
+    border-left: 4px solid var(--color-violeta);
+  }
+
+  .cifras__valor {
+    font-size: var(--texto-2xl);
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+    line-height: 1;
+  }
+
+  .cifras__etiqueta {
+    color: var(--color-texto);
+  }
+
+  .cifras__nota {
+    margin-top: var(--space-5);
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    font-style: italic;
+  }
+
+  @media (max-width: 767px) {
+    .cifras__grilla {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .cifras__grilla {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

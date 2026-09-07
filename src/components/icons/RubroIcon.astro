@@ -1,0 +1,44 @@
+---
+// Set de íconos propios (line icons, trazo 2px, sin librería externa) para
+// los 8 rubros. Deliberadamente simples y reconocibles: el motivo modular de
+// bloques de la marca se reserva para un único protagonismo por pantalla
+// (ver DECISIONES.md), no para este set utilitario de filtrado.
+interface Props {
+  icono: string;
+  class?: string;
+}
+
+const { icono, class: clase = '' } = Astro.props;
+
+const trazos: Record<string, string> = {
+  mineria: '<path d="M16 4 26 12 22 28 10 28 6 12Z"/><path d="M16 4v24"/>',
+  agroindustria:
+    '<path d="M16 28c0 0-10-6-10-16 0-6 6-8 10-8s10 2 10 8c0 10-10 16-10 16Z"/><path d="M16 8v20"/>',
+  energia:
+    '<circle cx="16" cy="16" r="6"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M7 7l2.8 2.8M22.2 22.2 25 25M25 7l-2.8 2.8M9.8 22.2 7 25"/>',
+  tecnologia:
+    '<rect x="10" y="10" width="12" height="12" rx="1.5"/><path d="M13 10V5M19 10V5M13 27v-5M19 27v-5M10 13H5M10 19H5M27 13h-5M27 19h-5"/>',
+  turismo:
+    '<path d="M16 28s9-9.5 9-16a9 9 0 1 0-18 0c0 6.5 9 16 9 16Z"/><circle cx="16" cy="12" r="3.5"/>',
+  textil:
+    '<circle cx="16" cy="15" r="9"/><path d="M16 6c-3 3-3 15 0 18M16 6c3 3 3 15 0 18M7 15h18"/>',
+  logistica:
+    '<rect x="4" y="12" width="15" height="10" rx="1"/><path d="M19 15h5l3 4v3h-8z"/><circle cx="10" cy="24" r="2.2"/><circle cx="23" cy="24" r="2.2"/>',
+  servicios:
+    '<ellipse cx="16" cy="10" rx="8" ry="3.5"/><path d="M8 10v6c0 1.9 3.6 3.5 8 3.5s8-1.6 8-3.5v-6"/><path d="M8 16v6c0 1.9 3.6 3.5 8 3.5s8-1.6 8-3.5v-6"/>',
+};
+
+const contenido = trazos[icono] ?? '';
+---
+
+<svg
+  class={clase}
+  viewBox="0 0 32 32"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  set:html={contenido}
+/>

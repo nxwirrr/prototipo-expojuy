@@ -1,0 +1,23 @@
+---
+// Gráfico de tapa generado (bloques de la paleta institucional) en vez de
+// una foto de stock: evita que una imagen genérica se confunda con una
+// cobertura fotográfica real de una edición que todavía no ocurrió.
+interface Props {
+  semilla: number;
+  class?: string;
+}
+
+const { semilla, class: clase = '' } = Astro.props;
+
+const colores = ['var(--color-turquesa)', 'var(--color-violeta)', 'var(--color-purpura)', 'var(--color-lila)'];
+const a = colores[semilla % colores.length];
+const b = colores[(semilla + 1) % colores.length];
+const c = colores[(semilla + 2) % colores.length];
+---
+
+<svg class={clase} viewBox="0 0 120 90" aria-hidden="true" role="presentation" preserveAspectRatio="xMidYMid slice">
+  <rect width="120" height="90" fill="var(--color-fondo-alterno)" />
+  <rect x="0" y="0" width="70" height="45" fill={a} />
+  <rect x="70" y="0" width="50" height="28" fill={b} />
+  <rect x="0" y="45" width="40" height="45" fill={c} />
+</svg>

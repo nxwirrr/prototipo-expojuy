@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import { withBase } from '@/utils/url';
+import { formatearDiaCorto } from '@/utils/fecha';
+
+const agenda = await getCollection('agenda');
+const proximas = [...agenda]
+  .sort((a, b) => {
+    const fechaA = `${a.data.dia.toISOString()}T${a.data.horarioInicio}`;
+    const fechaB = `${b.data.dia.toISOString()}T${b.data.horarioInicio}`;
+    return fechaA.localeCompare(fechaB);
+  })
+  .slice(0, 4);
+
+const etiquetaTipo: Record<string, string> = {
+  apertura: 'Apertura',
+  panel: 'Panel',
+  charla: 'Charla',
+  taller: 'Taller',
+  'rueda-de-negocios': 'Rueda de negocios',
+  networking: 'Networking',
+  cierre: 'Cierre',
+};
+---
+
+<section class="contenedor agenda-destacada" aria-labelledby="titulo-agenda-destacada">
+  <div class="agenda-destacada__encabezado">
+    <h2 id="titulo-agenda-destacada">Próximas actividades</h2>
+    <a href={withBase('/agenda')}>Ver agenda completa</a>
+  </div>
+
+  <ol class="agenda-destacada__lista">
+    {proximas.map((actividad) => (
+      <li class="agenda-destacada__item">
+        <div class="agenda-destacada__fecha">
+          <span class="agenda-destacada__dia">{formatearDiaCorto(actividad.data.dia)}</span>
+          <span class="agenda-destacada__hora">{actividad.data.horarioInicio}</span>
+        </div>
+        <div class="agenda-destacada__detalle">
+          <span class="agenda-destacada__tipo">{etiquetaTipo[actividad.data.tipo]}</span>
+          <p class="agenda-destacada__titulo">{actividad.data.titulo}</p>
+          <p class="agenda-destacada__espacio">
+            {actividad.data.espacio}
+            {actividad.data.orador && <> · {actividad.data.orador}</>}
+          </p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .agenda-destacada {
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .agenda-destacada__encabezado {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .agenda-destacada__lista {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .agenda-destacada__item {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: var(--space-5);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .agenda-destacada__item:last-child {
+    border-bottom: 1px solid var(--color-borde-ui);
+  }
+
+  .agenda-destacada__fecha {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .agenda-destacada__dia {
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+    text-transform: capitalize;
+  }
+
+  .agenda-destacada__hora {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+  }
+
+  .agenda-destacada__tipo {
+    display: inline-block;
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-semibold);
+    color: var(--color-enlace);
+    margin-bottom: var(--space-1);
+  }
+
+  .agenda-destacada__titulo {
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+  }
+
+  .agenda-destacada__espacio {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+  }
+
+  @media (max-width: 479px) {
+    .agenda-destacada__item {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+  }
+</style>

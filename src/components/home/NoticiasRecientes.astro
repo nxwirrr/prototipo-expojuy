@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import { withBase } from '@/utils/url';
+import NoticiaGrafico from '@/components/NoticiaGrafico.astro';
+import { formateadorFechaLarga } from '@/utils/fecha';
+
+const noticias = (await getCollection('noticias'))
+  .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())
+  .slice(0, 3);
+---
+
+<section class="contenedor noticias-recientes" aria-labelledby="titulo-noticias-recientes">
+  <div class="noticias-recientes__encabezado">
+    <h2 id="titulo-noticias-recientes">Noticias</h2>
+    <a href={withBase('/noticias')}>Ver todas</a>
+  </div>
+
+  <div class="noticias-recientes__lista">
+    {noticias.map((noticia, indice) => (
+      <a class="noticias-recientes__item" href={withBase(`/noticias/${noticia.id}`)}>
+        <NoticiaGrafico semilla={indice} class="noticias-recientes__grafico" />
+        <div>
+          <p class="noticias-recientes__fecha">{formateadorFechaLarga.format(noticia.data.fecha)}</p>
+          <p class="noticias-recientes__titulo">{noticia.data.titulo}</p>
+          <p class="noticias-recientes__bajada">{noticia.data.bajada}</p>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .noticias-recientes {
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .noticias-recientes__encabezado {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .noticias-recientes__lista {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  .noticias-recientes__item {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+
+  .noticias-recientes__grafico {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    margin-bottom: var(--space-4);
+  }
+
+  .noticias-recientes__fecha {
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    margin-bottom: var(--space-1);
+  }
+
+  .noticias-recientes__titulo {
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+    margin-bottom: var(--space-2);
+  }
+
+  .noticias-recientes__bajada {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+  }
+
+  @media (max-width: 767px) {
+    .noticias-recientes__lista {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

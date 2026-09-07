@@ -1,0 +1,106 @@
+---
+// Fecha y hora de inicio (acto de apertura), con offset explícito de
+// Argentina para que el cálculo no dependa de la zona horaria del server.
+const inicioEvento = '2026-10-09T10:00:00-03:00';
+
+// Fallback sin JS: se calcula una sola vez, en el build. No se actualiza en
+// tiempo real, pero deja un número correcto (o cercano) para quien navegue
+// sin JavaScript o antes de que el script cargue.
+const msPorDia = 1000 * 60 * 60 * 24;
+const diferenciaMs = new Date(inicioEvento).getTime() - Date.now();
+const diasRestantesBuild = Math.max(0, Math.ceil(diferenciaMs / msPorDia));
+---
+
+<section class="contenedor cuenta-regresiva" aria-labelledby="titulo-cuenta-regresiva">
+  <h2 id="titulo-cuenta-regresiva" class="solo-lectores-pantalla">Cuenta regresiva para ExpoJuy 2026</h2>
+  <div class="cuenta-regresiva__caja" data-cuenta-regresiva data-fecha={inicioEvento}>
+    <div class="cuenta-regresiva__segmento">
+      <span class="cuenta-regresiva__numero" data-dias>{diasRestantesBuild}</span>
+      <span class="cuenta-regresiva__etiqueta">días</span>
+    </div>
+    <div class="cuenta-regresiva__segmento">
+      <span class="cuenta-regresiva__numero" data-horas>00</span>
+      <span class="cuenta-regresiva__etiqueta">horas</span>
+    </div>
+    <div class="cuenta-regresiva__segmento">
+      <span class="cuenta-regresiva__numero" data-minutos>00</span>
+      <span class="cuenta-regresiva__etiqueta">min</span>
+    </div>
+    <div class="cuenta-regresiva__segmento">
+      <span class="cuenta-regresiva__numero" data-segundos>00</span>
+      <span class="cuenta-regresiva__etiqueta">seg</span>
+    </div>
+  </div>
+  <p class="cuenta-regresiva__leyenda">para el inicio de ExpoJuy 2026</p>
+</section>
+
+<style>
+  .cuenta-regresiva {
+    padding-block: var(--space-7);
+    text-align: center;
+  }
+
+  .cuenta-regresiva__caja {
+    display: inline-flex;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cuenta-regresiva__segmento {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 4.5rem;
+  }
+
+  .cuenta-regresiva__numero {
+    font-size: var(--texto-2xl);
+    font-weight: var(--peso-bold);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-purpura);
+  }
+
+  .cuenta-regresiva__etiqueta {
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    font-weight: var(--peso-semibold);
+  }
+
+  .cuenta-regresiva__leyenda {
+    margin-top: var(--space-3);
+    color: var(--color-texto);
+  }
+</style>
+
+<script>
+  function iniciarCuentaRegresiva(contenedor: HTMLElement) {
+    const fechaObjetivo = new Date(contenedor.dataset.fecha ?? '').getTime();
+    const elDias = contenedor.querySelector('[data-dias]');
+    const elHoras = contenedor.querySelector('[data-horas]');
+    const elMinutos = contenedor.querySelector('[data-minutos]');
+    const elSegundos = contenedor.querySelector('[data-segundos]');
+
+    const dosDigitos = (n: number) => String(n).padStart(2, '0');
+
+    function actualizar() {
+      const restanteMs = Math.max(0, fechaObjetivo - Date.now());
+      const dias = Math.floor(restanteMs / 86_400_000);
+      const horas = Math.floor((restanteMs % 86_400_000) / 3_600_000);
+      const minutos = Math.floor((restanteMs % 3_600_000) / 60_000);
+      const segundos = Math.floor((restanteMs % 60_000) / 1000);
+
+      if (elDias) elDias.textContent = String(dias);
+      if (elHoras) elHoras.textContent = dosDigitos(horas);
+      if (elMinutos) elMinutos.textContent = dosDigitos(minutos);
+      if (elSegundos) elSegundos.textContent = dosDigitos(segundos);
+
+      if (restanteMs <= 0) clearInterval(intervalo);
+    }
+
+    actualizar();
+    const intervalo = setInterval(actualizar, 1000);
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-cuenta-regresiva]').forEach(iniciarCuentaRegresiva);
+</script>

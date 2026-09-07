@@ -167,6 +167,66 @@ memoria descriptiva final.
   FAQ usan contenido genérico verosímil (sin nombres propios reales) para
   que el jurado los identifique de un vistazo como datos de muestra.
 
+## Home (Bloque 3)
+
+- **Once secciones, cada una con un tratamiento visual distinto** (hero,
+  franja numérica, tira de tarjetas de color, timeline de agenda, grilla de
+  rubros, banner del mapa, lista editorial de noticias, filas de sponsors
+  por tamaño, acordeón de FAQ) para no caer en "tarjetas idénticas con
+  sombra" en una página tan larga.
+- **El único elemento curvo de la home** es el semicírculo del gráfico del
+  hero (`Hero.astro`), construido con los mismos bloques + semicírculo del
+  isologo. El resto de la página es completamente recta a propósito.
+- **Cuenta regresiva:** se calcula un valor en el build (días restantes) que
+  queda como contenido real sin JavaScript, y un script la mejora a
+  días/horas/minutos/segundos en vivo. Sin JS el visitante igual ve un
+  número de días correcto (o cercano, según cuándo se generó el build), no
+  un cero ni un hueco vacío.
+- **Buscador de expositores en la home = teaser, no el buscador completo.**
+  Es un `<form method="get" action="/expositores">` con un input de texto y
+  la grilla de los 8 rubros como enlaces (`?rubro=id`). Funciona sin JS
+  (navegación normal), y el buscador completo con filtros combinables vive
+  en `/expositores` (Bloque 4), que va a leer esos parámetros de la URL.
+- **Mapa del predio en la home = banner con enlace**, no el mapa interactivo
+  real (ese vive solo en `/predio`, Bloque 5). Repetir la interactividad
+  completa en la home hubiera duplicado peso y lógica sin agregar valor.
+
+### Dos bugs reales encontrados al revisar en el navegador
+
+- **`.boton--secundario` era invisible sobre fondo oscuro.** Había una regla
+  `body:not(.superficie-oscura) .boton--secundario { color: var(--color-titulo) }`
+  pensada para "si NO estoy en una superficie oscura, uso texto oscuro". El
+  problema: `.superficie-oscura` nunca se aplica a `<body>`, se aplica a
+  secciones sueltas (header, hero, footer) — así que la condición
+  `body:not(.superficie-oscura)` es siempre verdadera, sin importar en qué
+  sección esté el botón. Resultado: el botón "Ser expositor" del hero
+  mostraba texto casi negro sobre fondo casi negro. Se sacó esa regla y se
+  dejó que `color: inherit` haga el trabajo (hereda blanco dentro de
+  `.superficie-oscura`, gris de texto fuera de ella).
+- **`getCollection()` con el loader `file()` no conserva el orden del JSON:**
+  lo devuelve ordenado alfabéticamente por `id`. Esto reordenaba las cuatro
+  audiencias de la home (Empresas, Expositores, Prensa, Visitantes en vez de
+  Visitantes, Expositores, Empresas, Prensa) y hubiera hecho lo mismo con
+  cualquier lista que dependa de una secuencia específica. Se corrigió
+  reordenando a mano en `AccesoAudiencias.astro`, y se dejó
+  `src/utils/rubros.ts` con la tabla explícita de letra de sector por rubro
+  para que el mapa del predio (Bloque 5) no repita el mismo error asumiendo
+  que la posición en el array define la letra.
+- **Corrimiento de un día en las fechas.** `dia`/`fecha` se guardan como
+  `"YYYY-MM-DD"` y Zod las parsea como medianoche UTC. Formatearlas con
+  `Intl.DateTimeFormat` sin fijar `timeZone` usa la hora local de quien
+  compila o visita el sitio; en cualquier huso detrás de UTC (incluido
+  Argentina) esa medianoche cae la noche anterior, así que el 9 de octubre
+  se mostraba como "8 Oct". `src/utils/fecha.ts` fuerza `timeZone: 'UTC'` en
+  todos los formateadores de fecha para que el calendario mostrado sea
+  siempre el que se escribió en los datos, sin importar dónde se mire el
+  sitio.
+- **Íconos de rubro:** son un set propio de line-icons simples (trazo 2px),
+  no el motivo de bloques de la marca. A propósito: tienen que ser
+  reconocibles de un vistazo para filtrar rápido, y el pliego pide reservar
+  el motivo modular para un solo protagonismo por pantalla en vez de
+  aplicarlo a todo.
+
 ## Pendiente / a confirmar antes de la entrega
 
 - `astro.config.mjs` tiene `site`/`base` con placeholders (`<usuario>/<repo>`):

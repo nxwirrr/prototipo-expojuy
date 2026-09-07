@@ -1,0 +1,128 @@
+---
+import { getCollection } from 'astro:content';
+import { withBase } from '@/utils/url';
+import RubroIcon from '@/components/icons/RubroIcon.astro';
+
+const rubros = await getCollection('rubros');
+const expositores = await getCollection('expositores');
+
+function contarPorRubro(rubroId: string) {
+  return expositores.filter((e) => e.data.rubro === rubroId).length;
+}
+---
+
+<section class="contenedor buscador-teaser" aria-labelledby="titulo-buscador-teaser">
+  <div class="buscador-teaser__encabezado">
+    <h2 id="titulo-buscador-teaser">Encontrá expositores por rubro</h2>
+    <p>Más de 20 empresas de comercio exterior, organizadas en ocho rubros.</p>
+  </div>
+
+  <form class="buscador-teaser__form" action={withBase('/expositores')} method="get" role="search">
+    <label for="buscador-teaser-input" class="solo-lectores-pantalla">Buscar expositor por nombre</label>
+    <input
+      id="buscador-teaser-input"
+      type="search"
+      name="q"
+      placeholder="Buscar por nombre de empresa…"
+    />
+    <button type="submit" class="boton boton--primario">Buscar</button>
+  </form>
+
+  <div class="buscador-teaser__grilla">
+    {rubros.map((rubro) => (
+      <a class="buscador-teaser__rubro" href={`${withBase('/expositores')}?rubro=${rubro.data.id}`}>
+        <RubroIcon icono={rubro.data.icono} class="buscador-teaser__icono" />
+        <span class="buscador-teaser__nombre">{rubro.data.nombre}</span>
+        <span class="buscador-teaser__conteo">{contarPorRubro(rubro.data.id)} expositores</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .buscador-teaser {
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .buscador-teaser__encabezado {
+    margin-bottom: var(--space-6);
+  }
+
+  .buscador-teaser__encabezado p {
+    color: var(--color-texto);
+    margin-top: var(--space-2);
+  }
+
+  .buscador-teaser__form {
+    display: flex;
+    gap: var(--space-3);
+    max-width: 32rem;
+    margin-bottom: var(--space-7);
+  }
+
+  .buscador-teaser__form input {
+    flex: 1;
+    min-height: var(--area-tactil-min);
+    padding-inline: var(--space-4);
+    border: 2px solid var(--color-borde-ui);
+    border-radius: var(--radio-control);
+    background: var(--color-fondo);
+    color: var(--color-texto);
+  }
+
+  .buscador-teaser__form input:focus-visible {
+    border-color: var(--color-foco);
+  }
+
+  .buscador-teaser__grilla {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+  }
+
+  .buscador-teaser__rubro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2);
+    padding: var(--space-5) var(--space-3);
+    background: var(--color-fondo-alterno);
+    text-decoration: none;
+    border: 2px solid transparent;
+  }
+
+  .buscador-teaser__rubro:hover {
+    border-color: var(--color-purpura);
+  }
+
+  .buscador-teaser__icono {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--color-purpura);
+  }
+
+  .buscador-teaser__nombre {
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+    font-size: var(--texto-sm);
+  }
+
+  .buscador-teaser__conteo {
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+  }
+
+  @media (max-width: 767px) {
+    .buscador-teaser__grilla {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 479px) {
+    .buscador-teaser__form {
+      flex-direction: column;
+    }
+  }
+</style>

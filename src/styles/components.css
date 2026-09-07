@@ -32,14 +32,19 @@
   color: inherit;
 }
 
+/*
+  El color es `inherit` a propósito: sobre fondo claro hereda el gris de
+  texto (accesible, ver tokens.css), sobre `.superficie-oscura` hereda el
+  blanco de esa superficie. Antes había una regla `body:not(.superficie-oscura)`
+  que forzaba texto oscuro SIEMPRE (la clase nunca se aplica a <body>, así
+  que la condición era siempre verdadera) y volvía el botón invisible sobre
+  fondos oscuros como el hero. El hover de abajo sigue la misma lógica:
+  la regla de superficie oscura pisa a la de base por especificidad.
+*/
+.boton--secundario:hover {
+  background: var(--color-fondo-alterno);
+}
+
 .superficie-oscura .boton--secundario:hover {
   background: rgba(255, 255, 255, 0.12);
-}
-
-body:not(.superficie-oscura) .boton--secundario {
-  color: var(--color-titulo);
-}
-
-body:not(.superficie-oscura) .boton--secundario:hover {
-  background: var(--color-fondo-alterno);
 }

@@ -1,0 +1,111 @@
+---
+import { getCollection } from 'astro:content';
+import { withBase } from '@/utils/url';
+
+// getCollection() con el loader file() no conserva el orden del JSON: lo
+// devuelve ordenado por id. Se reordena a mano para que siga la misma
+// secuencia que la franja de audiencias del header (Visitantes, Expositores,
+// Empresas, Prensa).
+const ordenSlugs = ['visitantes', 'expositores-info', 'empresas', 'prensa'];
+const audienciasSinOrdenar = await getCollection('audiencias');
+const audiencias = ordenSlugs
+  .map((slug) => audienciasSinOrdenar.find((a) => a.data.slug === slug))
+  .filter((a) => a !== undefined);
+
+const colorPorSlug: Record<string, 'turquesa' | 'violeta' | 'purpura' | 'lila'> = {
+  visitantes: 'turquesa',
+  'expositores-info': 'violeta',
+  empresas: 'purpura',
+  prensa: 'lila',
+};
+---
+
+<section class="contenedor acceso-audiencias" aria-labelledby="titulo-audiencias">
+  <h2 id="titulo-audiencias">¿Qué buscás en ExpoJuy?</h2>
+  <div class="acceso-audiencias__grilla">
+    {audiencias.map((a) => (
+      <a
+        class={`acceso-audiencias__tarjeta acceso-audiencias__tarjeta--${colorPorSlug[a.data.slug] ?? 'violeta'}`}
+        href={withBase(`/${a.data.slug}`)}
+      >
+        <span class="acceso-audiencias__titulo">{a.data.titular}</span>
+        <span class="acceso-audiencias__bajada">{a.data.bajada}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .acceso-audiencias {
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .acceso-audiencias h2 {
+    margin-bottom: var(--space-6);
+  }
+
+  .acceso-audiencias__grilla {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+  }
+
+  .acceso-audiencias__tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    min-height: 180px;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: border-color var(--duracion-rapida) var(--easing-estandar);
+  }
+
+  .acceso-audiencias__tarjeta:hover {
+    border-color: currentColor;
+  }
+
+  .acceso-audiencias__tarjeta--turquesa {
+    background: color-mix(in srgb, var(--color-turquesa) 16%, var(--color-blanco));
+    color: var(--color-titulo);
+  }
+
+  .acceso-audiencias__tarjeta--violeta {
+    background: color-mix(in srgb, var(--color-violeta) 12%, var(--color-blanco));
+    color: var(--color-titulo);
+  }
+
+  .acceso-audiencias__tarjeta--purpura {
+    background: color-mix(in srgb, var(--color-purpura) 10%, var(--color-blanco));
+    color: var(--color-titulo);
+  }
+
+  .acceso-audiencias__tarjeta--lila {
+    background: color-mix(in srgb, var(--color-lila) 20%, var(--color-blanco));
+    color: var(--color-titulo);
+  }
+
+  .acceso-audiencias__titulo {
+    font-size: var(--texto-md);
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+  }
+
+  .acceso-audiencias__bajada {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+  }
+
+  @media (max-width: 767px) {
+    .acceso-audiencias__grilla {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .acceso-audiencias__grilla {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

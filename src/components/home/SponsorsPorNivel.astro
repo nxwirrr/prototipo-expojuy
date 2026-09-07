@@ -1,0 +1,97 @@
+---
+import { getCollection } from 'astro:content';
+import PlacaIniciales from '@/components/PlacaIniciales.astro';
+
+const sponsors = await getCollection('sponsors');
+
+const niveles = ['Platino', 'Oro', 'Plata', 'Bronce'] as const;
+const colorPorNivel: Record<(typeof niveles)[number], 'turquesa' | 'violeta' | 'purpura' | 'lila'> = {
+  Platino: 'purpura',
+  Oro: 'violeta',
+  Plata: 'lila',
+  Bronce: 'turquesa',
+};
+---
+
+<section class="contenedor sponsors" aria-labelledby="titulo-sponsors">
+  <h2 id="titulo-sponsors">Sponsors</h2>
+
+  {niveles.map((nivel) => {
+    const deEsteNivel = sponsors.filter((s) => s.data.nivel === nivel);
+    if (deEsteNivel.length === 0) return null;
+    return (
+      <div class={`sponsors__fila sponsors__fila--${nivel.toLowerCase()}`}>
+        <span class="sponsors__nivel">{nivel}</span>
+        <ul class="sponsors__lista">
+          {deEsteNivel.map((s) => (
+            <li class="sponsors__item">
+              <PlacaIniciales nombre={s.data.nombre} color={colorPorNivel[nivel]} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  })}
+</section>
+
+<style>
+  .sponsors {
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .sponsors h2 {
+    margin-bottom: var(--space-6);
+  }
+
+  .sponsors__fila {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    align-items: center;
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .sponsors__fila:last-child {
+    border-bottom: 1px solid var(--color-borde-ui);
+  }
+
+  .sponsors__nivel {
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+  }
+
+  .sponsors__lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .sponsors__item {
+    width: 6rem;
+  }
+
+  .sponsors__fila--platino .sponsors__item {
+    width: 8rem;
+  }
+
+  .sponsors__fila--oro .sponsors__item {
+    width: 6.5rem;
+  }
+
+  .sponsors__fila--plata .sponsors__item {
+    width: 5.5rem;
+  }
+
+  .sponsors__fila--bronce .sponsors__item {
+    width: 4.5rem;
+  }
+
+  @media (max-width: 767px) {
+    .sponsors__fila {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+  }
+</style>

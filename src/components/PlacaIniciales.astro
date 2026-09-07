@@ -1,0 +1,56 @@
+---
+// Reemplaza al logo real (que no existe para contenido de demostración, ver
+// DECISIONES.md) con una placa de iniciales en el color del rubro/nivel,
+// reutilizando el lenguaje de bloques del isologo en vez de un ícono
+// genérico de "imagen rota".
+interface Props {
+  nombre: string;
+  color?: 'turquesa' | 'violeta' | 'purpura' | 'lila';
+  class?: string;
+}
+
+const { nombre, color = 'violeta', class: clase = '' } = Astro.props;
+
+const iniciales = nombre
+  .split(/\s+/)
+  .filter((palabra) => /[a-záéíóúñ]/i.test(palabra))
+  .slice(0, 2)
+  .map((palabra) => palabra.charAt(0).toUpperCase())
+  .join('');
+---
+
+<div class={`placa-iniciales placa-iniciales--${color} ${clase}`} aria-hidden="true">
+  <span>{iniciales}</span>
+</div>
+
+<style>
+  .placa-iniciales {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    width: 100%;
+    font-family: var(--fuente-base);
+    font-weight: var(--peso-bold);
+    font-size: clamp(1.1rem, 3vw, 1.75rem);
+    color: var(--color-titulo);
+  }
+
+  .placa-iniciales--turquesa {
+    background: var(--color-turquesa);
+  }
+
+  .placa-iniciales--violeta {
+    background: var(--color-violeta);
+    color: var(--color-blanco);
+  }
+
+  .placa-iniciales--purpura {
+    background: var(--color-purpura);
+    color: var(--color-blanco);
+  }
+
+  .placa-iniciales--lila {
+    background: var(--color-lila);
+  }
+</style>

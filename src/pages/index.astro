@@ -1,18 +1,55 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/home/Hero.astro';
+import Countdown from '@/components/home/Countdown.astro';
+import CifrasEdicionAnterior from '@/components/home/CifrasEdicionAnterior.astro';
+import AccesoAudiencias from '@/components/home/AccesoAudiencias.astro';
+import AgendaDestacada from '@/components/home/AgendaDestacada.astro';
+import BuscadorExpositoresTeaser from '@/components/home/BuscadorExpositoresTeaser.astro';
+import MapaPredioTeaser from '@/components/home/MapaPredioTeaser.astro';
+import NoticiasRecientes from '@/components/home/NoticiasRecientes.astro';
+import SponsorsPorNivel from '@/components/home/SponsorsPorNivel.astro';
+import FaqAcordeon from '@/components/home/FaqAcordeon.astro';
+
+const datosEvento = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: 'ExpoJuy 2026',
+  description: 'Conectando países, creando oportunidades. Feria de comercio exterior en San Salvador de Jujuy.',
+  startDate: '2026-10-09T10:00:00-03:00',
+  endDate: '2026-10-12T18:00:00-03:00',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  location: {
+    '@type': 'Place',
+    name: 'Ciudad Cultural',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'San Salvador de Jujuy',
+      addressRegion: 'Jujuy',
+      addressCountry: 'AR',
+    },
+  },
+  organizer: [
+    { '@type': 'Organization', name: 'Cámara de Comercio Exterior de Jujuy' },
+    { '@type': 'Organization', name: 'Ministerio de Desarrollo Económico y Producción de la Provincia de Jujuy' },
+  ],
+};
 ---
 
 <BaseLayout
   title="ExpoJuy 2026"
   description="ExpoJuy 2026: conectando países, creando oportunidades. Feria de comercio exterior en San Salvador de Jujuy, del 9 al 12 de octubre de 2026."
+  structuredData={datosEvento}
 >
-  <section class="contenedor" style="padding-block: var(--space-9);">
-    <h1>ExpoJuy 2026</h1>
-    <p>Conectando países, creando oportunidades.</p>
-    <p style="margin-top: var(--space-4); color: var(--color-texto);">
-      Estructura base y contenido de muestra ya definidos — header, footer,
-      tokens de diseño y Content Collections. La home completa llega en el
-      próximo bloque.
-    </p>
-  </section>
+  <Hero />
+  <Countdown />
+  <CifrasEdicionAnterior />
+  <AccesoAudiencias />
+  <AgendaDestacada />
+  <BuscadorExpositoresTeaser />
+  <MapaPredioTeaser />
+  <NoticiasRecientes />
+  <SponsorsPorNivel />
+  <FaqAcordeon />
 </BaseLayout>

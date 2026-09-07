@@ -1,0 +1,56 @@
+---
+import { withBase } from '@/utils/url';
+---
+
+<section class="contenedor mapa-teaser" aria-labelledby="titulo-mapa-teaser">
+  <div class="mapa-teaser__texto">
+    <h2 id="titulo-mapa-teaser">Recorré el predio antes de llegar</h2>
+    <p>
+      Un mapa interactivo del predio, por sector: elegí un rubro y descubrí
+      qué empresas exponen en cada zona de la Ciudad Cultural.
+    </p>
+    <a class="boton boton--primario" href={withBase('/predio')}>Ver mapa interactivo</a>
+  </div>
+
+  <svg class="mapa-teaser__grafico" viewBox="0 0 200 140" aria-hidden="true" role="presentation">
+    <rect x="4" y="4" width="60" height="60" fill="var(--color-turquesa)" />
+    <rect x="70" y="4" width="60" height="28" fill="var(--color-violeta)" />
+    <rect x="70" y="36" width="60" height="28" fill="var(--color-purpura)" />
+    <rect x="136" y="4" width="60" height="60" fill="var(--color-lila)" />
+    <rect x="4" y="70" width="94" height="66" fill="var(--color-fondo-alterno)" stroke="var(--color-borde-ui)" stroke-width="2" />
+    <rect x="104" y="70" width="92" height="66" fill="var(--color-fondo-alterno)" stroke="var(--color-borde-ui)" stroke-width="2" />
+  </svg>
+</section>
+
+<style>
+  .mapa-teaser {
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-borde-ui);
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  .mapa-teaser__texto p {
+    color: var(--color-texto);
+    margin-block: var(--space-4) var(--space-6);
+    max-width: 48ch;
+  }
+
+  .mapa-teaser__grafico {
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 1199px) {
+    .mapa-teaser {
+      grid-template-columns: 1fr;
+    }
+
+    .mapa-teaser__grafico {
+      order: -1;
+      max-width: 420px;
+    }
+  }
+</style>

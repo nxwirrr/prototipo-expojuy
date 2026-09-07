@@ -1,0 +1,84 @@
+---
+import { getCollection } from 'astro:content';
+import { withBase } from '@/utils/url';
+
+const faq = (await getCollection('faq')).slice(0, 6);
+---
+
+<section class="contenedor faq" aria-labelledby="titulo-faq">
+  <div class="faq__encabezado">
+    <h2 id="titulo-faq">Preguntas frecuentes</h2>
+    <a href={`${withBase('/contacto')}#faq`}>Ver todas las preguntas</a>
+  </div>
+
+  <div class="faq__lista">
+    {faq.map((item) => (
+      <details class="faq__item">
+        <summary class="faq__pregunta">{item.data.pregunta}</summary>
+        <p class="faq__respuesta">{item.data.respuesta}</p>
+      </details>
+    ))}
+  </div>
+</section>
+
+<style>
+  .faq {
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .faq__encabezado {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .faq__lista {
+    max-width: var(--ancho-maximo-angosto);
+  }
+
+  .faq__item {
+    border-top: 1px solid var(--color-borde-ui);
+    padding-block: var(--space-4);
+  }
+
+  .faq__item:last-child {
+    border-bottom: 1px solid var(--color-borde-ui);
+  }
+
+  .faq__pregunta {
+    cursor: pointer;
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .faq__pregunta::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__pregunta::after {
+    content: '+';
+    font-size: var(--texto-lg);
+    font-weight: var(--peso-regular);
+    color: var(--color-purpura);
+    flex-shrink: 0;
+  }
+
+  .faq__item[open] .faq__pregunta::after {
+    content: '−';
+  }
+
+  .faq__respuesta {
+    margin-top: var(--space-3);
+    color: var(--color-texto);
+    max-width: 65ch;
+  }
+</style>
