@@ -1,0 +1,197 @@
+---
+import { Image } from 'astro:assets';
+import logoVertical from '@/assets/images/expojuy-logo-vertical.png';
+import logoCamcomex from '@/assets/images/camcomex-logo.png';
+import { withBase } from '@/utils/url';
+
+const enlacesContenido = [
+  { etiqueta: 'ExpoJuy 2026', href: '/sobre-expojuy' },
+  { etiqueta: 'Agenda', href: '/agenda' },
+  { etiqueta: 'Expositores', href: '/expositores' },
+  { etiqueta: 'El predio', href: '/predio' },
+  { etiqueta: 'Noticias', href: '/noticias' },
+  { etiqueta: 'Sponsors', href: '/sponsors' },
+  { etiqueta: 'Entradas', href: '/entradas' },
+  { etiqueta: 'Contacto y FAQ', href: '/contacto' },
+];
+
+const enlacesAudiencia = [
+  { etiqueta: 'Visitantes', href: '/visitantes' },
+  { etiqueta: 'Expositores', href: '/expositores-info' },
+  { etiqueta: 'Empresas', href: '/empresas' },
+  { etiqueta: 'Prensa', href: '/prensa' },
+];
+
+// Sin cuentas oficiales confirmadas todavía: se muestra el diseño de la
+// sección sin inventar enlaces que aparenten ser reales (ver DECISIONES.md).
+const redes = ['Instagram', 'Facebook', 'LinkedIn'];
+---
+
+<footer class="footer superficie-oscura">
+  <div class="contenedor footer__grillado">
+    <div class="footer__marca">
+      <Image src={logoVertical} alt="ExpoJuy 2026 — Conectando países, creando oportunidades" width={140} height={97} />
+      <p>
+        Ciudad Cultural, San Salvador de Jujuy<br />
+        9 al 12 de octubre de 2026
+      </p>
+    </div>
+
+    <nav class="footer__columna" aria-label="Contenido del sitio">
+      <h2>Contenido</h2>
+      <ul>
+        {enlacesContenido.map((e) => (
+          <li><a href={withBase(e.href)}>{e.etiqueta}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <nav class="footer__columna" aria-label="Accesos por audiencia">
+      <h2>Para vos que sos</h2>
+      <ul>
+        {enlacesAudiencia.map((e) => (
+          <li><a href={withBase(e.href)}>{e.etiqueta}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="footer__columna">
+      <h2>Redes</h2>
+      <ul class="footer__redes">
+        {redes.map((r) => (
+          <li>
+            <span class="footer__red">
+              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+                <rect x="1" y="1" width="7" height="7" fill="var(--color-acento-oscuro)" />
+                <rect x="10" y="1" width="7" height="16" fill="var(--color-acento-oscuro-2)" />
+                <rect x="1" y="10" width="7" height="7" fill="currentColor" />
+              </svg>
+              {r}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p class="footer__nota">Cuentas oficiales, a confirmar en el sitio definitivo.</p>
+    </div>
+  </div>
+
+  <div class="footer__institucional">
+    <div class="contenedor footer__institucional-interior">
+      <p class="footer__organiza">
+        <strong>Organizan:</strong> Cámara de Comercio Exterior de Jujuy · Ministerio de Desarrollo Económico y Producción de la Provincia de Jujuy
+        <br />
+        <strong>Acompaña:</strong> ClusteAR – Cámara de Empresas TICs
+      </p>
+      <Image src={logoCamcomex} alt="Cámara de Comercio Exterior de Jujuy (CamComex)" width={64} height={60} class="footer__logo-camcomex" />
+    </div>
+  </div>
+
+  <div class="footer__legal">
+    <p class="contenedor">
+      © 2026 ExpoJuy — Prototipo del Desafío Digital ExpoJuy 2026. Sitio de demostración, sin funcionalidad de venta real.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--space-9);
+  }
+
+  .footer__grillado {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-7);
+    padding-block: var(--space-8);
+  }
+
+  .footer__marca p {
+    margin-top: var(--space-4);
+    color: var(--color-texto-oscuro-tenue);
+    font-size: var(--texto-sm);
+  }
+
+  .footer__columna h2 {
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-bold);
+    color: var(--color-texto-oscuro-tenue);
+    margin-bottom: var(--space-4);
+  }
+
+  .footer__columna ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer__columna a {
+    text-decoration: none;
+  }
+
+  .footer__red {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-texto-oscuro-tenue);
+    font-size: var(--texto-sm);
+  }
+
+  .footer__nota {
+    margin-top: var(--space-4);
+    font-size: var(--texto-sm);
+    color: var(--color-texto-oscuro-tenue);
+    font-style: italic;
+  }
+
+  .footer__institucional {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .footer__institucional-interior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-block: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .footer__organiza {
+    font-size: var(--texto-sm);
+    color: var(--color-texto-oscuro-tenue);
+    line-height: 1.7;
+  }
+
+  .footer__logo-camcomex {
+    background: var(--color-blanco);
+    padding: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  .footer__legal {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .footer__legal p {
+    padding-block: var(--space-4);
+    font-size: var(--texto-sm);
+    color: var(--color-texto-oscuro-tenue);
+  }
+
+  @media (max-width: 767px) {
+    .footer__grillado {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .footer__grillado {
+      grid-template-columns: 1fr;
+    }
+
+    .footer__institucional-interior {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

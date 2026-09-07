@@ -1,0 +1,284 @@
+---
+import { Image } from 'astro:assets';
+import logoHorizontal from '@/assets/images/expojuy-logo-horizontal.png';
+import { withBase } from '@/utils/url';
+
+const audiencias = [
+  { etiqueta: 'Visitantes', href: '/visitantes' },
+  { etiqueta: 'Expositores', href: '/expositores-info' },
+  { etiqueta: 'Empresas', href: '/empresas' },
+  { etiqueta: 'Prensa', href: '/prensa' },
+];
+
+const navegacionPrincipal = [
+  { etiqueta: 'ExpoJuy 2026', href: '/sobre-expojuy' },
+  { etiqueta: 'Agenda', href: '/agenda' },
+  { etiqueta: 'Expositores', href: '/expositores' },
+  { etiqueta: 'El predio', href: '/predio' },
+  { etiqueta: 'Noticias', href: '/noticias' },
+  { etiqueta: 'Sponsors', href: '/sponsors' },
+  { etiqueta: 'Contacto', href: '/contacto' },
+];
+
+const rutaActual = Astro.url.pathname;
+
+function esActual(href: string): boolean {
+  const base = withBase(href);
+  return rutaActual === base || rutaActual === `${base}/`;
+}
+---
+
+<div class="franja-audiencias superficie-oscura">
+  <div class="contenedor franja-audiencias__interior">
+    <span class="franja-audiencias__etiqueta">Para vos que sos:</span>
+    <ul class="franja-audiencias__lista">
+      {audiencias.map((a) => (
+        <li>
+          <a href={withBase(a.href)} aria-current={esActual(a.href) ? 'page' : undefined}>
+            {a.etiqueta}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<header class="header">
+  <div class="contenedor header__interior">
+    <a href={withBase('/')} class="header__logo" aria-label="ExpoJuy 2026, ir al inicio">
+      <Image src={logoHorizontal} alt="ExpoJuy 2026 — Conectando países, creando oportunidades" width={220} height={95} />
+    </a>
+
+    <button
+      id="boton-menu"
+      class="header__boton-menu"
+      type="button"
+      aria-expanded="false"
+      aria-controls="nav-principal"
+    >
+      <span class="solo-lectores-pantalla">Abrir menú de navegación</span>
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+        <rect y="4" width="26" height="3" fill="currentColor" />
+        <rect y="12" width="26" height="3" fill="currentColor" />
+        <rect y="20" width="26" height="3" fill="currentColor" />
+      </svg>
+    </button>
+
+    <nav id="nav-principal" class="nav-principal" aria-label="Navegación principal">
+      <ul class="nav-principal__lista">
+        {navegacionPrincipal.map((item) => (
+          <li>
+            <a href={withBase(item.href)} aria-current={esActual(item.href) ? 'page' : undefined}>
+              {item.etiqueta}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href={withBase('/entradas')} class="boton boton--primario nav-principal__cta">Entradas</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .franja-audiencias {
+    font-size: var(--texto-sm);
+  }
+
+  .franja-audiencias__interior {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-height: 36px;
+    flex-wrap: wrap;
+  }
+
+  .franja-audiencias__etiqueta {
+    color: var(--color-texto-oscuro-tenue);
+    font-weight: var(--peso-semibold);
+  }
+
+  .franja-audiencias__lista {
+    display: flex;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+  }
+
+  .franja-audiencias__lista a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    font-weight: var(--peso-semibold);
+    text-decoration: none;
+  }
+
+  .franja-audiencias__lista a[aria-current='page'] {
+    color: var(--color-acento-oscuro);
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background: var(--color-fondo);
+    border-bottom: 1px solid var(--color-borde-ui);
+  }
+
+  .header__interior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    min-height: 88px;
+  }
+
+  .header__logo {
+    flex-shrink: 0;
+    line-height: 0;
+  }
+
+  .header__logo :global(img) {
+    height: 52px;
+    width: auto;
+  }
+
+  .header__boton-menu {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--area-tactil-min);
+    height: var(--area-tactil-min);
+    color: var(--color-titulo);
+  }
+
+  .nav-principal {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .nav-principal__lista {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+  }
+
+  .nav-principal__lista a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--color-titulo);
+    font-weight: var(--peso-semibold);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .nav-principal__lista a:hover {
+    color: var(--color-enlace);
+  }
+
+  .nav-principal__lista a[aria-current='page'] {
+    border-bottom-color: var(--color-violeta);
+    color: var(--color-enlace);
+  }
+
+  @media (max-width: 1199px) {
+    .franja-audiencias__etiqueta {
+      display: none;
+    }
+
+    /* Sin JavaScript: la navegación queda visible, apilada bajo el header.
+       Es menos prolija pero totalmente funcional y accesible. */
+    .nav-principal {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-4);
+      padding-block: var(--space-4) var(--space-5);
+    }
+
+    .nav-principal__lista {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .nav-principal__lista a {
+      padding-block: var(--space-3);
+      border-bottom: 1px solid var(--color-borde-ui);
+    }
+
+    .nav-principal__cta {
+      align-self: flex-start;
+    }
+  }
+
+  /* Con JavaScript disponible (clase agregada por el script inline de
+     BaseLayout): la navegación se convierte en un cajón deslizable. */
+  @media (max-width: 1199px) {
+    :global(html.js) .header__boton-menu {
+      display: inline-flex;
+    }
+
+    :global(html.js) .nav-principal {
+      position: fixed;
+      inset: 0 0 0 auto;
+      width: min(320px, 85vw);
+      height: 100vh;
+      height: 100svh;
+      background: var(--color-fondo);
+      justify-content: flex-start;
+      padding: var(--space-8) var(--space-5) var(--space-6);
+      box-shadow: var(--sombra-flotante);
+      transform: translateX(100%);
+      transition: transform var(--duracion-media) var(--easing-estandar);
+      z-index: var(--z-menu);
+      overflow-y: auto;
+    }
+
+    :global(html.js) .nav-principal.esta-abierto {
+      transform: translateX(0);
+    }
+
+    :global(html.js) .nav-principal__cta {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  const boton = document.getElementById('boton-menu');
+  const nav = document.getElementById('nav-principal');
+
+  if (boton && nav) {
+    const cerrar = () => {
+      nav.classList.remove('esta-abierto');
+      boton.setAttribute('aria-expanded', 'false');
+    };
+
+    const abrir = () => {
+      nav.classList.add('esta-abierto');
+      boton.setAttribute('aria-expanded', 'true');
+    };
+
+    boton.addEventListener('click', () => {
+      const abierto = boton.getAttribute('aria-expanded') === 'true';
+      abierto ? cerrar() : abrir();
+    });
+
+    nav.addEventListener('keydown', (evento) => {
+      if (evento instanceof KeyboardEvent && evento.key === 'Escape') {
+        cerrar();
+        boton.focus();
+      }
+    });
+
+    document.addEventListener('click', (evento) => {
+      const dentro = nav.contains(evento.target as Node) || boton.contains(evento.target as Node);
+      if (!dentro) cerrar();
+    });
+
+    window.matchMedia('(min-width: 1200px)').addEventListener('change', (evento) => {
+      if (evento.matches) cerrar();
+    });
+  }
+</script>

@@ -1,0 +1,42 @@
+/*
+  Tipografía: Manrope (SIL Open Font License 1.1), autohospedada.
+  Sustituye a Ambit —tipografía oficial de ExpoJuy— porque Ambit es comercial
+  y no está disponible como webfont con licencia de uso en sitios (ver
+  DECISIONES.md). Manrope es una grotesca geométrica de terminales rectas,
+  con la misma familia de pesos (Light/Regular/SemiBold/Bold) que Ambit.
+  Se autohospeda en vez de cargarla desde Google Fonts para no depender de
+  un servicio de terceros en tiempo de ejecución y evitar una conexión
+  externa adicional en el arranque de la página.
+*/
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/manrope-300.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/manrope-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/manrope-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/manrope-700.woff2') format('woff2');
+}

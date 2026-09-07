@@ -1,0 +1,66 @@
+---
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import DemoNotice from '@/components/DemoNotice.astro';
+import '@/styles/fonts.css';
+import '@/styles/tokens.css';
+import '@/styles/base.css';
+import '@/styles/components.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** JSON-LD adicional (por ejemplo, schema.org/Event en la home). */
+  structuredData?: Record<string, unknown>;
+  /** Evita que el buscador indexe la página (páginas de demostración puntuales). */
+  noindex?: boolean;
+}
+
+const { title, description, structuredData, noindex = false } = Astro.props;
+
+const tituloCompleto = title === 'ExpoJuy 2026' ? title : `${title} · ExpoJuy 2026`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const imagenSocial = new URL(`${import.meta.env.BASE_URL}images/og-image.png`, Astro.site);
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imagenSocial} />
+    <meta property="og:locale" content="es_AR" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
+
+    <script is:inline>
+      // Progressive enhancement: marca que hay JS disponible para que el
+      // menú del header (y otros componentes) puedan mejorar su comportamiento
+      // sin depender de JavaScript para ser utilizables.
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <a class="saltar-al-contenido" href="#contenido">Saltar al contenido</a>
+    <DemoNotice />
+    <Header />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

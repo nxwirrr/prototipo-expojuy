@@ -1,0 +1,45 @@
+/* Botones: componente compartido entre header, hero y CTAs de página */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--area-tactil-min);
+  padding: var(--space-3) var(--space-5);
+  font-weight: var(--peso-semibold);
+  font-size: var(--texto-base);
+  border-radius: var(--radio-control);
+  border: 2px solid transparent;
+  text-decoration: none;
+  transition: background-color var(--duracion-rapida) var(--easing-estandar),
+    border-color var(--duracion-rapida) var(--easing-estandar),
+    color var(--duracion-rapida) var(--easing-estandar);
+}
+
+.boton--primario {
+  background: var(--color-boton-fondo);
+  color: var(--color-boton-texto);
+}
+
+.boton--primario:hover {
+  background: #6338d9;
+  color: var(--color-boton-texto);
+}
+
+.boton--secundario {
+  background: transparent;
+  border-color: currentColor;
+  color: inherit;
+}
+
+.superficie-oscura .boton--secundario:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+body:not(.superficie-oscura) .boton--secundario {
+  color: var(--color-titulo);
+}
+
+body:not(.superficie-oscura) .boton--secundario:hover {
+  background: var(--color-fondo-alterno);
+}

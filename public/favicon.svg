@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="ExpoJuy 2026">
+  <rect x="12" y="12" width="26" height="17" fill="#25c0d4"/>
+  <rect x="12" y="33" width="26" height="17" fill="#820cd0"/>
+  <rect x="62" y="12" width="26" height="38" fill="#774ff0"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" fill="#bb8cff"
+    d="M12,54 A38,38 0 0 0 88,54 Z M26,54 A24,24 0 0 0 74,54 Z"/>
+</svg>

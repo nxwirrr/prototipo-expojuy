@@ -1,0 +1,114 @@
+/*
+  Tokens de diseño de ExpoJuy 2026.
+
+  Puntos de corte del sitio (no expresables como custom property dentro de
+  @media, se documentan acá y se usan como literales en cada archivo):
+    --bp-sm: 480px
+    --bp-md: 768px
+    --bp-lg: 1200px
+
+  Reglas de contraste medidas sobre la paleta institucional (ver DECISIONES.md):
+    - Turquesa y lila NUNCA como texto sobre fondo claro (fallan AA).
+      Sí como fondo de bloque con texto oscuro encima, o como texto/gráfico
+      sobre fondo oscuro (#1A1A1A), donde ambas pasan AA.
+    - Púrpura: texto de énfasis y enlaces sobre fondo claro (7.21:1).
+    - Violeta: fondo de botón con texto blanco encima (5.05:1 con blanco).
+    - Gris texto: cuerpo de texto sobre fondo claro (8.70:1). No usar sobre
+      fondo oscuro (2.00:1, falla): ahí el cuerpo de texto va en blanco.
+*/
+
+:root {
+  /* Paleta institucional */
+  --color-turquesa: #25c0d4;
+  --color-violeta: #774ff0;
+  --color-purpura: #820cd0;
+  --color-lila: #bb8cff;
+  --color-gris-texto: #4b4b4d;
+  --color-rojo-camcomex: #c1001f;
+
+  /* Neutros */
+  --color-blanco: #ffffff;
+  --color-hueso: #f7f6fb;
+  --color-borde: #e2dff0;
+  --color-oscuro: #1a1a1a;
+  --color-oscuro-superficie: #262230;
+
+  /* Roles semánticos (tema claro, por defecto) */
+  --color-fondo: var(--color-blanco);
+  --color-fondo-alterno: var(--color-hueso);
+  --color-texto: var(--color-gris-texto);
+  --color-titulo: var(--color-oscuro);
+  --color-enlace: var(--color-purpura);
+  --color-enlace-hover: #6a0aad;
+  --color-boton-fondo: var(--color-violeta);
+  --color-boton-texto: var(--color-blanco);
+  --color-borde-ui: var(--color-borde);
+  --color-foco: var(--color-purpura);
+
+  /* Roles semánticos, superficies oscuras (header, hero, footer) */
+  --color-fondo-oscuro: var(--color-oscuro);
+  --color-fondo-oscuro-superficie: var(--color-oscuro-superficie);
+  --color-texto-oscuro: var(--color-blanco);
+  --color-texto-oscuro-tenue: #c9c6d6;
+  --color-acento-oscuro: var(--color-turquesa);
+  --color-acento-oscuro-2: var(--color-lila);
+
+  /* Tipografía */
+  --fuente-base: 'Manrope', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --peso-light: 300;
+  --peso-regular: 400;
+  --peso-semibold: 600;
+  --peso-bold: 700;
+
+  /* Escala tipográfica fluida (clamp: mínimo, preferido en vw, máximo) */
+  --texto-sm: clamp(0.8rem, 0.78rem + 0.1vw, 0.875rem);
+  --texto-base: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --texto-md: clamp(1.125rem, 1.08rem + 0.25vw, 1.25rem);
+  --texto-lg: clamp(1.375rem, 1.28rem + 0.5vw, 1.625rem);
+  --texto-xl: clamp(1.75rem, 1.55rem + 1vw, 2.25rem);
+  --texto-2xl: clamp(2.25rem, 1.9rem + 1.75vw, 3.25rem);
+  --texto-3xl: clamp(2.75rem, 2.2rem + 2.75vw, 4.25rem);
+
+  --interlineado-titulo: 1.1;
+  --interlineado-texto: 1.6;
+
+  /* Espaciado (base 4px) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  /* Layout */
+  --ancho-maximo: 1200px;
+  --ancho-maximo-angosto: 780px;
+  --padding-linea: var(--space-5);
+
+  /* Bordes y radios: el sistema visual es de bloques rectos; el radio se
+     reserva para controles interactivos pequeños, nunca para tarjetas. */
+  --radio-control: 4px;
+  --radio-chip: 999px;
+
+  /* Área táctil mínima (WCAG 2.5.5 / requisito del pliego) */
+  --area-tactil-min: 44px;
+
+  /* Sombra: una sola, sutil, reservada para elementos flotantes (menús,
+     modales), no para tarjetas de contenido. */
+  --sombra-flotante: 0 8px 24px -8px rgba(26, 20, 41, 0.28);
+
+  /* Transiciones (ver también prefers-reduced-motion en base.css) */
+  --duracion-rapida: 120ms;
+  --duracion-media: 220ms;
+  --easing-estandar: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Índices de apilamiento */
+  --z-header: 100;
+  --z-menu: 200;
+  --z-modal: 300;
+  --z-skip-link: 1000;
+}
