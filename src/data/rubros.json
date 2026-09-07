@@ -1,0 +1,10 @@
+[
+  { "id": "mineria", "nombre": "Minería y litio", "icono": "mineria", "color": "turquesa" },
+  { "id": "agroindustria", "nombre": "Agroindustria y alimentos", "icono": "agroindustria", "color": "violeta" },
+  { "id": "energia", "nombre": "Energías renovables", "icono": "energia", "color": "purpura" },
+  { "id": "tecnologia", "nombre": "Tecnología y software", "icono": "tecnologia", "color": "lila" },
+  { "id": "turismo", "nombre": "Turismo", "icono": "turismo", "color": "turquesa" },
+  { "id": "textil", "nombre": "Textil y cueros", "icono": "textil", "color": "violeta" },
+  { "id": "logistica", "nombre": "Logística y transporte", "icono": "logistica", "color": "purpura" },
+  { "id": "servicios", "nombre": "Servicios financieros y seguros", "icono": "servicios", "color": "lila" }
+]

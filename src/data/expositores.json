@@ -1,0 +1,33 @@
+[
+  { "id": "empresa-demo-01", "nombre": "Empresa Demo 01", "rubro": "mineria", "pais": "Argentina", "sector": "A-01", "descripcionBreve": "Provisión de equipamiento y servicios técnicos para proyectos de litio y minería metalífera." },
+  { "id": "empresa-demo-02", "nombre": "Empresa Demo 02", "rubro": "mineria", "pais": "Chile", "sector": "A-02", "descripcionBreve": "Consultoría en exploración geológica y procesos de extracción sustentable." },
+  { "id": "empresa-demo-03", "nombre": "Empresa Demo 03", "rubro": "mineria", "pais": "Alemania", "sector": "A-03", "descripcionBreve": "Maquinaria industrial para plantas de procesamiento de minerales." },
+
+  { "id": "empresa-demo-04", "nombre": "Empresa Demo 04", "rubro": "agroindustria", "pais": "Argentina", "sector": "B-01", "descripcionBreve": "Exportación de legumbres y granos andinos con certificación orgánica." },
+  { "id": "empresa-demo-05", "nombre": "Empresa Demo 05", "rubro": "agroindustria", "pais": "Bolivia", "sector": "B-02", "descripcionBreve": "Producción y envasado de quinoa y cereales regionales para mercados externos." },
+  { "id": "empresa-demo-06", "nombre": "Empresa Demo 06", "rubro": "agroindustria", "pais": "Paraguay", "sector": "B-03", "descripcionBreve": "Frigorífico exportador de carnes con foco en el mercado sudamericano." },
+
+  { "id": "empresa-demo-07", "nombre": "Empresa Demo 07", "rubro": "energia", "pais": "España", "sector": "C-01", "descripcionBreve": "Desarrollo de parques solares fotovoltaicos para la Puna jujeña." },
+  { "id": "empresa-demo-08", "nombre": "Empresa Demo 08", "rubro": "energia", "pais": "Argentina", "sector": "C-02", "descripcionBreve": "Instalación de paneles solares para uso industrial y residencial." },
+  { "id": "empresa-demo-09", "nombre": "Empresa Demo 09", "rubro": "energia", "pais": "China", "sector": "C-03", "descripcionBreve": "Fabricación de baterías de almacenamiento para energías renovables." },
+
+  { "id": "empresa-demo-10", "nombre": "Empresa Demo 10", "rubro": "tecnologia", "pais": "Argentina", "sector": "D-01", "descripcionBreve": "Desarrollo de software de gestión para comercio exterior y aduanas." },
+  { "id": "empresa-demo-11", "nombre": "Empresa Demo 11", "rubro": "tecnologia", "pais": "Uruguay", "sector": "D-02", "descripcionBreve": "Plataformas de trazabilidad digital para cadenas de exportación." },
+  { "id": "empresa-demo-12", "nombre": "Empresa Demo 12", "rubro": "tecnologia", "pais": "India", "sector": "D-03", "descripcionBreve": "Servicios de desarrollo de software a medida y outsourcing tecnológico." },
+
+  { "id": "empresa-demo-13", "nombre": "Empresa Demo 13", "rubro": "turismo", "pais": "Argentina", "sector": "E-01", "descripcionBreve": "Operador de turismo receptivo especializado en la Quebrada de Humahuaca." },
+  { "id": "empresa-demo-14", "nombre": "Empresa Demo 14", "rubro": "turismo", "pais": "Perú", "sector": "E-02", "descripcionBreve": "Agencia de viajes mayorista para circuitos turísticos andinos regionales." },
+  { "id": "empresa-demo-15", "nombre": "Empresa Demo 15", "rubro": "turismo", "pais": "Argentina", "sector": "E-03", "descripcionBreve": "Cadena hotelera con proyectos de inversión en el norte argentino." },
+
+  { "id": "empresa-demo-16", "nombre": "Empresa Demo 16", "rubro": "textil", "pais": "Argentina", "sector": "F-01", "descripcionBreve": "Hilandería de fibra de llama y vicuña para exportación textil." },
+  { "id": "empresa-demo-17", "nombre": "Empresa Demo 17", "rubro": "textil", "pais": "Bolivia", "sector": "F-02", "descripcionBreve": "Manufactura de prendas artesanales con diseño regional andino." },
+  { "id": "empresa-demo-18", "nombre": "Empresa Demo 18", "rubro": "textil", "pais": "Brasil", "sector": "F-03", "descripcionBreve": "Curtiembre y marroquinería de cuero para mercados internacionales." },
+
+  { "id": "empresa-demo-19", "nombre": "Empresa Demo 19", "rubro": "logistica", "pais": "Argentina", "sector": "G-01", "descripcionBreve": "Operador logístico especializado en pasos fronterizos del NOA." },
+  { "id": "empresa-demo-20", "nombre": "Empresa Demo 20", "rubro": "logistica", "pais": "Chile", "sector": "G-02", "descripcionBreve": "Transporte de cargas y gestión de despachos aduaneros bioceánicos." },
+  { "id": "empresa-demo-21", "nombre": "Empresa Demo 21", "rubro": "logistica", "pais": "Paraguay", "sector": "G-03", "descripcionBreve": "Depósitos fiscales y servicios de almacenamiento para exportadores." },
+
+  { "id": "empresa-demo-22", "nombre": "Empresa Demo 22", "rubro": "servicios", "pais": "Argentina", "sector": "H-01", "descripcionBreve": "Banca especializada en financiamiento de operaciones de comercio exterior." },
+  { "id": "empresa-demo-23", "nombre": "Empresa Demo 23", "rubro": "servicios", "pais": "Estados Unidos", "sector": "H-02", "descripcionBreve": "Seguros de crédito a la exportación y cobertura de riesgo cambiario." },
+  { "id": "empresa-demo-24", "nombre": "Empresa Demo 24", "rubro": "servicios", "pais": "Uruguay", "sector": "H-03", "descripcionBreve": "Consultoría en regímenes aduaneros y acuerdos de libre comercio." }
+]

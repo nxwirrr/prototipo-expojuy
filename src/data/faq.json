@@ -1,0 +1,10 @@
+[
+  { "id": "faq-01", "pregunta": "¿Dónde y cuándo se realiza ExpoJuy 2026?", "respuesta": "En la Ciudad Cultural de San Salvador de Jujuy, del 9 al 12 de octubre de 2026." },
+  { "id": "faq-02", "pregunta": "¿La entrada tiene costo?", "respuesta": "El acceso general para visitantes es gratuito, con inscripción previa online. Las rondas de negocios requieren acreditación específica para empresas." },
+  { "id": "faq-03", "pregunta": "¿Cómo llego al predio?", "respuesta": "La Ciudad Cultural cuenta con estacionamiento propio y está conectada por las principales líneas de transporte urbano de San Salvador de Jujuy." },
+  { "id": "faq-04", "pregunta": "¿Cómo puedo ser expositor?", "respuesta": "Completá el formulario de contacto indicando tu rubro y país de origen. El equipo organizador te va a contactar para coordinar el espacio y las condiciones." },
+  { "id": "faq-05", "pregunta": "¿Qué son las rondas de negocios?", "respuesta": "Son encuentros pautados entre empresas expositoras y compradores o inversores, organizados por rubro durante los tres primeros días del evento." },
+  { "id": "faq-06", "pregunta": "¿El predio es accesible para personas con movilidad reducida?", "respuesta": "Sí, todos los pabellones y salas de actividades cuentan con accesos e instalaciones adaptadas." },
+  { "id": "faq-07", "pregunta": "¿Cómo me acredito como prensa?", "respuesta": "Escribinos desde la sección de Contacto indicando el medio y la cobertura prevista. La acreditación incluye acceso a gacetillas y kit de prensa." },
+  { "id": "faq-08", "pregunta": "¿Hay servicio de traducción o intérpretes?", "respuesta": "Las actividades centrales y las rondas de negocios con delegaciones extranjeras cuentan con interpretación español/inglés y español/portugués." }
+]

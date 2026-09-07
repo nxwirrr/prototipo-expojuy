@@ -122,6 +122,51 @@ memoria descriptiva final.
   roja, se muestra sobre una placa blanca en el footer para no perder
   contraste ni chocar con el fondo oscuro de esa sección.
 
+## Content Collections (Bloque 2)
+
+- **Astro 7 usa `src/content.config.ts`** (Content Layer API), no la carpeta
+  `src/content/config.ts` de versiones viejas de Astro. Los datos
+  estructurados (rubros, expositores, agenda, sponsors, FAQ, audiencias)
+  viven en `src/data/*.json` y se cargan con el loader `file()`; las
+  noticias son la única colección en Markdown (`src/content/noticias/*.md`),
+  porque son el único contenido con cuerpo de texto largo — el campo
+  `cuerpo` del pliego se resuelve como el body del Markdown (`render()`),
+  no como un campo de esquema más.
+- El loader `file()` de Astro exige un campo `id` único por entrada (no
+  existe una opción `idColumn` en esta versión). En `audiencias.json` se
+  agregó `id` con el mismo valor que `slug` para no perder el nombre de
+  campo que pide el pliego.
+- **Colores de rubro:** los 8 rubros ciclan entre los cuatro colores
+  institucionales que sí pueden llevar texto/ícono encima sin romper
+  contraste (turquesa, violeta, púrpura, lila — ver la sección de color más
+  arriba), en vez de inventar una paleta secundaria. Prioriza la identidad
+  institucional por sobre tener 8 colores distintos; cada rubro además tiene
+  ícono y nombre propios para diferenciarse.
+- **Sectores del predio = letra de rubro:** cada uno de los 8 rubros tiene
+  asignada una letra (A a H, en el orden de `rubros.json`) y el campo
+  `sector` de cada expositor combina esa letra con un número
+  (`A-01`, `A-02`, …). Es a propósito: así el mapa interactivo del predio
+  (Bloque 5) puede cruzar sector → rubro → expositores con una sola regla,
+  sin tabla de mapeo adicional.
+- **Sin logos ni fotos de expositores/sponsors/noticias.** El pliego prohíbe
+  hacer pasar contenido de demostración por real; una foto o isologo
+  genérico bajado de un banco de imágenes podría leerse como el logo real de
+  alguna empresa existente. En cambio, expositores y sponsors muestran una
+  placa con sus iniciales en el color de su rubro/nivel (mismo lenguaje de
+  bloques del isologo), y las noticias muestran un gráfico abstracto
+  generado en vez de una foto de stock. El campo `logo`/`imagen` queda en el
+  esquema como opcional, previsto para cuando haya assets reales.
+- **Agenda en 3 de las 4 jornadas (9, 10 y 12 de octubre):** el pliego pide
+  "12 actividades en 3 días". Para que el acto de apertura y el de cierre
+  sigan cayendo en el primer y el último día real del evento, se dejó el 11
+  de octubre como jornada de piso de exposición sin actividades programadas
+  en la agenda central, en vez de comprimir apertura/cierre en 3 días
+  consecutivos que no incluyen el cierre real del evento.
+- Nombres ficticios siguiendo el patrón pedido: `Empresa Demo 01`–`24`,
+  `Sponsor Demo 01`–`10`, `Orador Demo 01`–`08`. Los rubros, países, agenda y
+  FAQ usan contenido genérico verosímil (sin nombres propios reales) para
+  que el jurado los identifique de un vistazo como datos de muestra.
+
 ## Pendiente / a confirmar antes de la entrega
 
 - `astro.config.mjs` tiene `site`/`base` con placeholders (`<usuario>/<repo>`):

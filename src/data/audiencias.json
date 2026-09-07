@@ -1,0 +1,53 @@
+[
+  {
+    "id": "visitantes",
+    "slug": "visitantes",
+    "titular": "Vení a conocer ExpoJuy 2026",
+    "bajada": "Cuatro días para descubrir empresas, productos y oportunidades del comercio exterior, en el corazón de San Salvador de Jujuy.",
+    "accesos": [
+      { "titulo": "Fecha y sede", "descripcion": "Del 9 al 12 de octubre, en la Ciudad Cultural.", "href": "/sobre-expojuy" },
+      { "titulo": "Cómo llegar", "descripcion": "Estacionamiento propio y transporte público cercano.", "href": "/contacto" },
+      { "titulo": "Entradas", "descripcion": "Acceso general gratuito, con inscripción previa.", "href": "/entradas" },
+      { "titulo": "Qué ver", "descripcion": "Agenda de charlas, paneles y el mapa de expositores.", "href": "/agenda" }
+    ],
+    "cta": { "texto": "Comprá tu entrada", "href": "/entradas" }
+  },
+  {
+    "id": "expositores-info",
+    "slug": "expositores-info",
+    "titular": "Mostrá tu empresa en ExpoJuy 2026",
+    "bajada": "Un espacio para conectar tu oferta con compradores, inversores y otras empresas del comercio exterior regional.",
+    "accesos": [
+      { "titulo": "Cómo exponer", "descripcion": "Contanos tu rubro y coordinamos tu espacio.", "href": "/contacto" },
+      { "titulo": "Rubros", "descripcion": "Ocho rubros distribuidos por sector del predio.", "href": "/expositores" },
+      { "titulo": "Planos del predio", "descripcion": "Recorré los sectores antes de armar tu stand.", "href": "/predio" }
+    ],
+    "cta": { "texto": "Quiero exponer", "href": "/contacto" }
+  },
+  {
+    "id": "empresas",
+    "slug": "empresas",
+    "titular": "Comercio exterior en el centro de ExpoJuy",
+    "bajada": "Rondas de negocios, misiones comerciales y delegaciones internacionales: el diferencial de una feria de comercio exterior.",
+    "accesos": [
+      { "titulo": "Rondas de negocios", "descripcion": "Encuentros pautados por rubro con compradores e inversores.", "href": "/agenda" },
+      { "titulo": "Misiones comerciales", "descripcion": "Delegaciones extranjeras en agenda durante el evento.", "href": "/agenda" },
+      { "titulo": "Países participantes", "descripcion": "Explorá los expositores por país de origen.", "href": "/expositores" },
+      { "titulo": "Oportunidades de inversión", "descripcion": "Proyectos regionales abiertos a inversión externa.", "href": "/sobre-expojuy" }
+    ],
+    "cta": { "texto": "Coordiná una reunión", "href": "/contacto" }
+  },
+  {
+    "id": "prensa",
+    "slug": "prensa",
+    "titular": "Cobertura de prensa de ExpoJuy 2026",
+    "bajada": "Acreditación, gacetillas y material gráfico para cubrir la feria de comercio exterior más importante de Jujuy.",
+    "accesos": [
+      { "titulo": "Acreditación", "descripcion": "Registrá tu medio para acceder al predio y a las salas.", "href": "/contacto" },
+      { "titulo": "Gacetillas", "descripcion": "Comunicados oficiales y novedades del evento.", "href": "/noticias" },
+      { "titulo": "Kit de logos", "descripcion": "Isologotipos oficiales en alta resolución, a pedido.", "href": "/contacto" },
+      { "titulo": "Banco de fotos", "descripcion": "Material fotográfico de ediciones anteriores, a pedido.", "href": "/contacto" }
+    ],
+    "cta": { "texto": "Acreditate", "href": "/contacto" }
+  }
+]

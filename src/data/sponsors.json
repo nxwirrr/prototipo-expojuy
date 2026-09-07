@@ -1,0 +1,15 @@
+[
+  { "id": "sponsor-demo-01", "nombre": "Sponsor Demo 01", "nivel": "Platino" },
+
+  { "id": "sponsor-demo-02", "nombre": "Sponsor Demo 02", "nivel": "Oro" },
+  { "id": "sponsor-demo-03", "nombre": "Sponsor Demo 03", "nivel": "Oro" },
+
+  { "id": "sponsor-demo-04", "nombre": "Sponsor Demo 04", "nivel": "Plata" },
+  { "id": "sponsor-demo-05", "nombre": "Sponsor Demo 05", "nivel": "Plata" },
+  { "id": "sponsor-demo-06", "nombre": "Sponsor Demo 06", "nivel": "Plata" },
+
+  { "id": "sponsor-demo-07", "nombre": "Sponsor Demo 07", "nivel": "Bronce" },
+  { "id": "sponsor-demo-08", "nombre": "Sponsor Demo 08", "nivel": "Bronce" },
+  { "id": "sponsor-demo-09", "nombre": "Sponsor Demo 09", "nivel": "Bronce" },
+  { "id": "sponsor-demo-10", "nombre": "Sponsor Demo 10", "nivel": "Bronce" }
+]
