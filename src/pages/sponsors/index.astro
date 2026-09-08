@@ -29,7 +29,7 @@ const colorPorNivel: Record<(typeof niveles)[number], 'turquesa' | 'violeta' | '
     if (deEsteNivel.length === 0) return null;
     return (
       <section class="contenedor sponsors-nivel">
-        <h2>{nivel}</h2>
+        <h2 class="solo-lectores-pantalla">Nivel {nivel}</h2>
         <ul class={`sponsors-nivel__lista sponsors-nivel__lista--${nivel.toLowerCase()}`}>
           {deEsteNivel.map((s) => (
             <li>

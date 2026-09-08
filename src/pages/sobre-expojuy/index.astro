@@ -120,7 +120,8 @@ const rubrosOrdenados = ORDEN_RUBROS_POR_SECTOR.map((id) => rubroPorId.get(id)).
     font-size: var(--texto-sm);
   }
 
-  .sobre-rubros__icono {
+  /* :global(): RubroIcon renderiza su propio <svg> raíz, ver DECISIONES.md */
+  :global(.sobre-rubros__icono) {
     width: 1.75rem;
     height: 1.75rem;
     color: var(--color-purpura);

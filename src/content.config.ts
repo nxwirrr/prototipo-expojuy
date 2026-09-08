@@ -41,6 +41,10 @@ const agenda = defineCollection({
     espacio: z.string(),
     tipo: z.enum(['apertura', 'panel', 'charla', 'taller', 'rueda-de-negocios', 'networking', 'cierre']),
     orador: z.string().optional(),
+    // Sólo se completa en actividades de tipo 'rueda-de-negocios': qué
+    // rubros participan de esa ronda, para poder mostrar la fecha en la
+    // ficha/tarjeta de cada expositor de ese rubro (ver DECISIONES.md).
+    rubros: z.array(z.string()).optional(),
   }),
 });
 

@@ -1,9 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import PlacaIniciales from '@/components/PlacaIniciales.astro';
 import RubroIcon from '@/components/icons/RubroIcon.astro';
+import DatoIcon from '@/components/icons/DatoIcon.astro';
 import { withBase } from '@/utils/url';
+import { formatearDia } from '@/utils/fecha';
+import { mapearRuedasDeNegociosPorRubro } from '@/utils/ruedasDeNegocios';
 
 export async function getStaticPaths() {
   const expositores = await getCollection('expositores');
@@ -21,6 +23,12 @@ const otrosDelRubro = (await getCollection('expositores'))
   .filter((e) => e.data.rubro === expositor.data.rubro && e.id !== expositor.id)
   .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'))
   .slice(0, 3);
+
+const ruedaDeNegocios = mapearRuedasDeNegociosPorRubro(await getCollection('agenda'))[expositor.data.rubro];
+
+// El código de sector ("A-01") separa letra de sector y número de stand,
+// para mostrarlos como dos datos distintos (ver DECISIONES.md).
+const [letraSector, numeroStand] = expositor.data.sector.split('-');
 ---
 
 <BaseLayout
@@ -33,16 +41,41 @@ const otrosDelRubro = (await getCollection('expositores'))
     </nav>
 
     <div class="ficha-expositor__encabezado">
-      <PlacaIniciales
-        nombre={expositor.data.nombre}
-        color={rubro?.color ?? 'violeta'}
-        class="ficha-expositor__placa"
-      />
-      <div>
-        <h1>{expositor.data.nombre}</h1>
-        <p class="ficha-expositor__meta">
-          {expositor.data.pais} · Sector {expositor.data.sector}
-        </p>
+      <h1>{expositor.data.nombre}</h1>
+      {rubro && (
+        <a class="ficha-expositor__categoria" href={`${withBase('/expositores')}?rubro=${rubro.id}`}>
+          {rubro.nombre}
+        </a>
+      )}
+    </div>
+
+    <div class="ficha-expositor__contacto">
+      <span class="ficha-expositor__dato">
+        <DatoIcon tipo="pais" class="ficha-expositor__dato-icono" />
+        {expositor.data.pais}
+      </span>
+      {ruedaDeNegocios && (
+        <span class="ficha-expositor__dato">
+          <DatoIcon tipo="fecha" class="ficha-expositor__dato-icono" />
+          Rueda de negocios: {formatearDia(ruedaDeNegocios.dia)}
+        </span>
+      )}
+      {expositor.data.web && (
+        <a class="ficha-expositor__dato ficha-expositor__dato--enlace" href={expositor.data.web} rel="noopener">
+          <DatoIcon tipo="web" class="ficha-expositor__dato-icono" />
+          Sitio web
+        </a>
+      )}
+    </div>
+
+    <div class="ficha-expositor__cajas">
+      <div class="ficha-expositor__caja">
+        <span class="ficha-expositor__caja-etiqueta">Sector</span>
+        <span class="ficha-expositor__caja-valor">{letraSector}</span>
+      </div>
+      <div class="ficha-expositor__caja">
+        <span class="ficha-expositor__caja-etiqueta">N.° de stand</span>
+        <span class="ficha-expositor__caja-valor">{numeroStand}</span>
       </div>
     </div>
 
@@ -50,12 +83,6 @@ const otrosDelRubro = (await getCollection('expositores'))
       <div class="ficha-expositor__principal">
         <h2>Sobre la empresa</h2>
         <p>{expositor.data.descripcionBreve}</p>
-
-        {expositor.data.web && (
-          <p>
-            <a href={expositor.data.web} rel="noopener">Sitio web</a>
-          </p>
-        )}
       </div>
 
       <aside class="ficha-expositor__aside" aria-labelledby="titulo-rubro-relacionado">
@@ -106,20 +133,78 @@ const otrosDelRubro = (await getCollection('expositores'))
   }
 
   .ficha-expositor__encabezado {
-    display: flex;
-    align-items: center;
-    gap: var(--space-5);
-    margin-bottom: var(--space-7);
+    margin-bottom: var(--space-4);
   }
 
-  .ficha-expositor__placa {
-    width: 5rem;
+  .ficha-expositor__categoria {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--area-tactil-min);
+    margin-top: var(--space-2);
+    font-weight: var(--peso-semibold);
+    color: var(--color-enlace);
+    text-decoration: none;
+  }
+
+  .ficha-expositor__contacto {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-5);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--color-borde-ui);
+    border-bottom: 1px solid var(--color-borde-ui);
+    margin-bottom: var(--space-6);
+  }
+
+  .ficha-expositor__dato {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--area-tactil-min);
+    color: var(--color-texto);
+    font-weight: var(--peso-semibold);
+  }
+
+  .ficha-expositor__dato--enlace {
+    color: var(--color-enlace);
+    text-decoration: none;
+  }
+
+  /* :global(): DatoIcon/RubroIcon renderizan su propio <svg> raíz, ver DECISIONES.md */
+  :global(.ficha-expositor__dato-icono) {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-purpura);
     flex-shrink: 0;
   }
 
-  .ficha-expositor__meta {
+  .ficha-expositor__cajas {
+    display: flex;
+    gap: var(--space-4);
+    margin-bottom: var(--space-7);
+  }
+
+  .ficha-expositor__caja {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-fondo-alterno);
+    border-left: 4px solid var(--color-violeta);
+    min-width: 9rem;
+  }
+
+  .ficha-expositor__caja-etiqueta {
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-semibold);
     color: var(--color-texto);
-    margin-top: var(--space-2);
+  }
+
+  .ficha-expositor__caja-valor {
+    font-size: var(--texto-xl);
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
   }
 
   .ficha-expositor__cuerpo {
@@ -137,10 +222,6 @@ const otrosDelRubro = (await getCollection('expositores'))
     max-width: 60ch;
   }
 
-  .ficha-expositor__principal p + p {
-    margin-top: var(--space-4);
-  }
-
   .ficha-expositor__aside {
     display: flex;
     flex-direction: column;
@@ -156,7 +237,7 @@ const otrosDelRubro = (await getCollection('expositores'))
     text-decoration: none;
   }
 
-  .ficha-expositor__rubro-icono {
+  :global(.ficha-expositor__rubro-icono) {
     width: 2rem;
     height: 2rem;
     color: var(--color-purpura);
@@ -196,6 +277,10 @@ const otrosDelRubro = (await getCollection('expositores'))
   @media (max-width: 767px) {
     .ficha-expositor__cuerpo {
       grid-template-columns: 1fr;
+    }
+
+    .ficha-expositor__cajas {
+      flex-wrap: wrap;
     }
   }
 </style>

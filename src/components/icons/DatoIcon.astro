@@ -1,0 +1,31 @@
+---
+// Set de íconos propios para los datos de contacto de expositores
+// (país, sector, rueda de negocios, sitio web), mismo trazo que RubroIcon.
+interface Props {
+  tipo: 'pais' | 'sector' | 'fecha' | 'web';
+  class?: string;
+}
+
+const { tipo, class: clase = '' } = Astro.props;
+
+const trazos: Record<Props['tipo'], string> = {
+  pais: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 4 5.8 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.8-4-9s1.5-6.5 4-9Z"/>',
+  sector: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>',
+  fecha: '<rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  web: '<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 9h16M9 20V9"/>',
+};
+
+const contenido = trazos[tipo] ?? '';
+---
+
+<svg
+  class={clase}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  set:html={contenido}
+/>

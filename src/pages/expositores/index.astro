@@ -3,10 +3,12 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import RubroIcon from '@/components/icons/RubroIcon.astro';
 import TarjetaExpositor from '@/components/TarjetaExpositor.astro';
+import { mapearRuedasDeNegociosPorRubro } from '@/utils/ruedasDeNegocios';
 
 const rubros = (await getCollection('rubros')).sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'));
 const expositores = await getCollection('expositores');
 const rubroPorId = new Map(rubros.map((r) => [r.data.id, r.data]));
+const ruedasPorRubro = mapearRuedasDeNegociosPorRubro(await getCollection('agenda'));
 
 const paises = [...new Set(expositores.map((e) => e.data.pais))].sort((a, b) => a.localeCompare(b, 'es'));
 
@@ -91,6 +93,7 @@ const expositoresOrdenados = [...expositores].sort((a, b) => a.data.nombre.local
             pais={expositor.data.pais}
             sector={expositor.data.sector}
             descripcionBreve={expositor.data.descripcionBreve}
+            ruedaDeNegocios={ruedasPorRubro[expositor.data.rubro]}
           />
         );
       })}
@@ -186,7 +189,8 @@ const expositoresOrdenados = [...expositores].sort((a, b) => a.data.nombre.local
     min-height: var(--area-tactil-min);
   }
 
-  .filtro-rubro__icono {
+  /* :global(): RubroIcon renderiza su propio <svg> raíz, ver DECISIONES.md */
+  :global(.filtro-rubro__icono) {
     width: 2rem;
     height: 2rem;
     color: var(--color-purpura);

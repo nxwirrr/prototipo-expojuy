@@ -1,7 +1,11 @@
 ---
-// Fecha y hora de inicio (acto de apertura), con offset explícito de
-// Argentina para que el cálculo no dependa de la zona horaria del server.
+import { getCollection } from 'astro:content';
+import { withBase } from '@/utils/url';
+
+// Fecha y hora de inicio/cierre (con offset explícito de Argentina para que
+// el cálculo no dependa de la zona horaria del server ni de quien visita).
 const inicioEvento = '2026-10-09T10:00:00-03:00';
+const finEvento = '2026-10-12T18:00:00-03:00';
 
 // Fallback sin JS: se calcula una sola vez, en el build. No se actualiza en
 // tiempo real, pero deja un número correcto (o cercano) para quien navegue
@@ -9,29 +13,74 @@ const inicioEvento = '2026-10-09T10:00:00-03:00';
 const msPorDia = 1000 * 60 * 60 * 24;
 const diferenciaMs = new Date(inicioEvento).getTime() - Date.now();
 const diasRestantesBuild = Math.max(0, Math.ceil(diferenciaMs / msPorDia));
+
+// Actividad destacada de cada jornada, para el estado "durante el evento":
+// apertura o cierre si ese día tiene una, si no el primer panel, si no la
+// primera actividad del día. Se arma en el build; el script del cliente
+// sólo elige qué día mostrar según la fecha real de quien visita.
+const agenda = await getCollection('agenda');
+const porDia = new Map<string, typeof agenda>();
+for (const actividad of agenda) {
+  const clave = actividad.data.dia.toISOString().slice(0, 10);
+  if (!porDia.has(clave)) porDia.set(clave, []);
+  porDia.get(clave)!.push(actividad);
+}
+
+const prioridadTipo = ['apertura', 'cierre', 'panel', 'rueda-de-negocios', 'charla', 'taller', 'networking'];
+const destacadoPorDia: Record<string, { titulo: string; horarioInicio: string; horarioFin: string; espacio: string }> = {};
+for (const [clave, actividades] of porDia) {
+  const ordenadas = [...actividades].sort(
+    (a, b) => prioridadTipo.indexOf(a.data.tipo) - prioridadTipo.indexOf(b.data.tipo)
+  );
+  const destacada = ordenadas[0];
+  destacadoPorDia[clave] = {
+    titulo: destacada.data.titulo,
+    horarioInicio: destacada.data.horarioInicio,
+    horarioFin: destacada.data.horarioFin,
+    espacio: destacada.data.espacio,
+  };
+}
 ---
 
-<section class="contenedor cuenta-regresiva" aria-labelledby="titulo-cuenta-regresiva">
-  <h2 id="titulo-cuenta-regresiva" class="solo-lectores-pantalla">Cuenta regresiva para ExpoJuy 2026</h2>
-  <div class="cuenta-regresiva__caja" data-cuenta-regresiva data-fecha={inicioEvento}>
-    <div class="cuenta-regresiva__segmento">
-      <span class="cuenta-regresiva__numero" data-dias>{diasRestantesBuild}</span>
-      <span class="cuenta-regresiva__etiqueta">días</span>
+<section class="contenedor cuenta-regresiva" aria-labelledby="titulo-cuenta-regresiva" data-seccion-fecha>
+  <h2 id="titulo-cuenta-regresiva" class="solo-lectores-pantalla">ExpoJuy 2026: cuándo es y qué hay hoy</h2>
+
+  <div data-estado-antes>
+    <div class="cuenta-regresiva__caja" data-cuenta-regresiva data-inicio={inicioEvento} data-fin={finEvento}>
+      <div class="cuenta-regresiva__segmento">
+        <span class="cuenta-regresiva__numero" data-dias>{diasRestantesBuild}</span>
+        <span class="cuenta-regresiva__etiqueta">días</span>
+      </div>
+      <div class="cuenta-regresiva__segmento">
+        <span class="cuenta-regresiva__numero" data-horas>00</span>
+        <span class="cuenta-regresiva__etiqueta">horas</span>
+      </div>
+      <div class="cuenta-regresiva__segmento">
+        <span class="cuenta-regresiva__numero" data-minutos>00</span>
+        <span class="cuenta-regresiva__etiqueta">min</span>
+      </div>
+      <div class="cuenta-regresiva__segmento">
+        <span class="cuenta-regresiva__numero" data-segundos>00</span>
+        <span class="cuenta-regresiva__etiqueta">seg</span>
+      </div>
     </div>
-    <div class="cuenta-regresiva__segmento">
-      <span class="cuenta-regresiva__numero" data-horas>00</span>
-      <span class="cuenta-regresiva__etiqueta">horas</span>
-    </div>
-    <div class="cuenta-regresiva__segmento">
-      <span class="cuenta-regresiva__numero" data-minutos>00</span>
-      <span class="cuenta-regresiva__etiqueta">min</span>
-    </div>
-    <div class="cuenta-regresiva__segmento">
-      <span class="cuenta-regresiva__numero" data-segundos>00</span>
-      <span class="cuenta-regresiva__etiqueta">seg</span>
-    </div>
+    <p class="cuenta-regresiva__leyenda">para el inicio de ExpoJuy 2026</p>
   </div>
-  <p class="cuenta-regresiva__leyenda">para el inicio de ExpoJuy 2026</p>
+
+  <div data-estado-durante hidden>
+    <p class="cuenta-regresiva__hoy-etiqueta">Hoy en ExpoJuy 2026</p>
+    <p class="cuenta-regresiva__hoy-titulo" data-hoy-titulo></p>
+    <p class="cuenta-regresiva__hoy-meta" data-hoy-meta></p>
+    <a class="boton boton--secundario" href={withBase('/agenda')}>Ver agenda completa</a>
+  </div>
+
+  <div data-estado-despues hidden>
+    <p class="cuenta-regresiva__hoy-etiqueta">¡Gracias por participar de ExpoJuy 2026!</p>
+    <p class="cuenta-regresiva__hoy-meta">Encontrá las novedades de esta edición en la sección Noticias.</p>
+    <a class="boton boton--secundario" href={withBase('/noticias')}>Ver noticias</a>
+  </div>
+
+  <script type="application/json" data-datos-destacados set:html={JSON.stringify(destacadoPorDia)} is:inline />
 </section>
 
 <style>
@@ -71,11 +120,38 @@ const diasRestantesBuild = Math.max(0, Math.ceil(diferenciaMs / msPorDia));
     margin-top: var(--space-3);
     color: var(--color-texto);
   }
+
+  .cuenta-regresiva__hoy-etiqueta {
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-bold);
+    color: var(--color-enlace);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .cuenta-regresiva__hoy-titulo {
+    font-size: var(--texto-2xl);
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+    margin-block: var(--space-2) var(--space-1);
+  }
+
+  .cuenta-regresiva__hoy-meta {
+    color: var(--color-texto);
+    margin-bottom: var(--space-5);
+  }
 </style>
 
 <script>
+  interface Destacado {
+    titulo: string;
+    horarioInicio: string;
+    horarioFin: string;
+    espacio: string;
+  }
+
   function iniciarCuentaRegresiva(contenedor: HTMLElement) {
-    const fechaObjetivo = new Date(contenedor.dataset.fecha ?? '').getTime();
+    const fechaInicio = new Date(contenedor.dataset.inicio ?? '').getTime();
     const elDias = contenedor.querySelector('[data-dias]');
     const elHoras = contenedor.querySelector('[data-horas]');
     const elMinutos = contenedor.querySelector('[data-minutos]');
@@ -84,7 +160,7 @@ const diasRestantesBuild = Math.max(0, Math.ceil(diferenciaMs / msPorDia));
     const dosDigitos = (n: number) => String(n).padStart(2, '0');
 
     function actualizar() {
-      const restanteMs = Math.max(0, fechaObjetivo - Date.now());
+      const restanteMs = Math.max(0, fechaInicio - Date.now());
       const dias = Math.floor(restanteMs / 86_400_000);
       const horas = Math.floor((restanteMs % 86_400_000) / 3_600_000);
       const minutos = Math.floor((restanteMs % 3_600_000) / 60_000);
@@ -102,5 +178,46 @@ const diasRestantesBuild = Math.max(0, Math.ceil(diferenciaMs / msPorDia));
     const intervalo = setInterval(actualizar, 1000);
   }
 
-  document.querySelectorAll<HTMLElement>('[data-cuenta-regresiva]').forEach(iniciarCuentaRegresiva);
+  function iniciarSeccionFecha(seccion: HTMLElement) {
+    const cajaCuentaRegresiva = seccion.querySelector<HTMLElement>('[data-cuenta-regresiva]');
+    if (!cajaCuentaRegresiva) return;
+
+    const inicio = new Date(cajaCuentaRegresiva.dataset.inicio ?? '').getTime();
+    const fin = new Date(cajaCuentaRegresiva.dataset.fin ?? '').getTime();
+
+    const estadoAntes = seccion.querySelector<HTMLElement>('[data-estado-antes]');
+    const estadoDurante = seccion.querySelector<HTMLElement>('[data-estado-durante]');
+    const estadoDespues = seccion.querySelector<HTMLElement>('[data-estado-despues]');
+    const datosScript = seccion.querySelector<HTMLScriptElement>('[data-datos-destacados]');
+    const destacados: Record<string, Destacado> = datosScript ? JSON.parse(datosScript.textContent ?? '{}') : {};
+
+    // ?vista=durante|despues fuerza un estado para poder mostrarlo en una
+    // demo sin esperar a la fecha real del evento (ver DECISIONES.md).
+    const forzado = new URLSearchParams(window.location.search).get('vista');
+    const ahora = Date.now();
+    const estado = forzado === 'durante' || forzado === 'despues' ? forzado : ahora < inicio ? 'antes' : ahora <= fin ? 'durante' : 'despues';
+
+    if (estado === 'antes') {
+      iniciarCuentaRegresiva(cajaCuentaRegresiva);
+      return;
+    }
+
+    estadoAntes?.setAttribute('hidden', '');
+
+    if (estado === 'durante') {
+      const claveHoy = new Date().toISOString().slice(0, 10);
+      const destacado = destacados[claveHoy] ?? Object.values(destacados)[0];
+      const elTitulo = estadoDurante?.querySelector<HTMLElement>('[data-hoy-titulo]');
+      const elMeta = estadoDurante?.querySelector<HTMLElement>('[data-hoy-meta]');
+      if (destacado && elTitulo && elMeta) {
+        elTitulo.textContent = destacado.titulo;
+        elMeta.textContent = `${destacado.horarioInicio} a ${destacado.horarioFin} · ${destacado.espacio}`;
+      }
+      estadoDurante?.removeAttribute('hidden');
+    } else {
+      estadoDespues?.removeAttribute('hidden');
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-seccion-fecha]').forEach(iniciarSeccionFecha);
 </script>

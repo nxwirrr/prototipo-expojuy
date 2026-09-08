@@ -2,6 +2,7 @@
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import DemoNotice from '@/components/DemoNotice.astro';
+import RedesSocialesSticky from '@/components/RedesSocialesSticky.astro';
 import '@/styles/fonts.css';
 import '@/styles/tokens.css';
 import '@/styles/base.css';
@@ -62,5 +63,6 @@ const imagenSocial = new URL(`${import.meta.env.BASE_URL}images/og-image.png`, A
       <slot />
     </main>
     <Footer />
+    <RedesSocialesSticky />
   </body>
 </html>

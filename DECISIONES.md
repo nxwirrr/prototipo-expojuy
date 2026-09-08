@@ -410,6 +410,80 @@ reales, no sólo se confirmó lo que ya estaba bien:
   todo el documento — no hace falta tocarla por cada componente nuevo que
   se agrega, así que no requirió cambios en este bloque.
 
+## Refinamiento de diseño post-Bloque 8
+
+A pedido del equipo, sobre feedback visual concreto (una tarjeta de
+referencia de otra feria) y antes de seguir con el deploy:
+
+- **Tarjeta de expositor (lista) rediseñada:** placa de iniciales más chica
+  (2.5rem, antes dominaba la tarjeta), subtítulo de rubro debajo del
+  nombre, y una fila de datos con íconos (país, sector) al pie —
+  reemplaza la línea de texto plana "Rubro · País · Sector" por algo más
+  escaneable. Se agrega un badge "Rueda de negocios · [fecha]" cuando el
+  rubro del expositor tiene una programada.
+- **Ficha de expositor (detalle) rediseñada** siguiendo el patrón de la
+  referencia (título, categoría, fila de datos de contacto con íconos,
+  cajas de información), pero con nuestros propios datos y lenguaje
+  visual — nunca se copió estructura ni recursos de un sitio de tercero,
+  sólo el patrón general de "fila de íconos + cajas de datos", que es un
+  layout genérico de directorios, no algo distintivo de esa feria. El
+  código de sector (`"A-01"`) se separa en dos cajas — "Sector" (letra) y
+  "N.° de stand" (número) — reutilizando un dato que ya existía, sin
+  inventar un campo nuevo.
+- **Cruce expositor → rueda de negocios:** se agregó un campo opcional
+  `rubros: string[]` a las actividades de agenda tipo `rueda-de-negocios`
+  (`content.config.ts` + `agenda.json`), y `utils/ruedasDeNegocios.ts`
+  arma el mapa rubro → fecha/horario. No todos los rubros tienen una rueda
+  programada (sólo minería, energía, agroindustria y textil en los datos
+  de muestra); en los demás, el badge no aparece.
+- **Redes sociales en una barra sticky vertical** (`RedesSocialesSticky.astro`),
+  fija en el margen derecho, visible sólo desde 1200px (donde hay
+  suficiente margen fuera del contenedor de 1200px sin superponerse). Por
+  debajo de ese ancho no hay margen para una barra flotante sin tapar
+  contenido, así que el footer sigue siendo el único acceso en mobile/
+  tablet. Mismo criterio que el footer (Bloque 1): sin cuentas oficiales
+  confirmadas, se muestra el diseño del acceso sin simular enlaces reales.
+- **Estado "hoy" del contador:** `Countdown.astro` ahora tiene tres estados
+  según la fecha real de quien visita — antes del evento (cuenta
+  regresiva, como ya existía), durante el evento (la actividad destacada
+  del día, cruzando contra la agenda) y después (mensaje de cierre). Como
+  el evento todavía no ocurrió al momento de este desarrollo, se agregó un
+  parámetro `?vista=durante` / `?vista=despues` en la URL para poder
+  mostrar y evaluar esos estados en una demo sin esperar a octubre de
+  2026 — documentado acá para que quede claro que es una ayuda de
+  demostración, no una funcionalidad de producción.
+- **Sponsors sin etiqueta de nivel visible:** a pedido explícito, se sacó
+  el texto "Platino/Oro/Plata/Bronce" de la vista (tanto en la home como
+  en `/sponsors`) para que el tamaño de la placa sea el único indicador
+  visual de jerarquía. La etiqueta se mantiene en el DOM como texto
+  visualmente oculto (clase `solo-lectores-pantalla`) para no perder esa
+  información para quien usa lector de pantalla — el tamaño relativo no
+  es perceptible de la misma manera sin la vista, así que confiar sólo en
+  él ahí sería un problema de accesibilidad.
+
+### Bug de sitio completo encontrado durante este repaso
+
+**Los íconos con clase pasada a un componente hijo no se dimensionaban.**
+`RubroIcon` y `DatoIcon` renderizan su propio `<svg>` como elemento raíz;
+cuando el componente que los usa les pasa una clase por prop para
+dimensionarlos (patrón usado desde el Bloque 3), Astro no propaga el
+atributo de scope (`data-astro-cid-*`) del padre a la raíz de un componente
+hijo. La regla CSS compilada queda como
+`.mi-clase[data-astro-cid-xxxxx] { width: ... }`, pero el `<svg>` real
+nunca tiene ese atributo — así que la regla no aplicaba nunca y el ícono
+quedaba con un tamaño intrínseco de ~80px en vez del tamaño pedido. Estaba
+así desde el Bloque 3 (`buscador-teaser__icono`) y se repitió en cada lugar
+nuevo que usó el mismo patrón (6 archivos en total). Se corrigió envolviendo
+cada selector afectado en `:global()`, que es la forma correcta en Astro de
+estilizar la raíz de un componente hijo desde el padre. Quedó documentado
+con un comentario en cada uno de los 6 lugares para que no se repita el
+error al agregar íconos nuevos.
+
+**Cómo se nos había pasado:** en las capturas de pantalla de bloques
+anteriores el ícono oversized no se leía como "roto", sólo como "un poco
+grande", así que no se marcó como bug hasta comparar la medida real
+(`getComputedStyle`) contra el valor esperado.
+
 ## Pendiente / a confirmar antes de la entrega
 
 - `astro.config.mjs` tiene `site`/`base` con placeholders
@@ -421,3 +495,7 @@ reales, no sólo se confirmó lo que ya estaba bien:
 - El mapa del predio (Bloque 5) usa un plano esquemático propio, no un
   relevamiento real de la Ciudad Cultural: reemplazar por el plano oficial
   si el organismo lo facilita.
+- El parámetro `?vista=durante`/`?vista=despues` de la home es una ayuda
+  para demostrar en la presentación los estados del contador que ocurren
+  durante/después del evento real (9-12 de octubre de 2026): sacarlo o
+  dejarlo documentado como "modo demo" antes de una entrega de producción.

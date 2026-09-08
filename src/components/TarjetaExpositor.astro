@@ -1,6 +1,9 @@
 ---
 import PlacaIniciales from '@/components/PlacaIniciales.astro';
+import DatoIcon from '@/components/icons/DatoIcon.astro';
 import { withBase } from '@/utils/url';
+import { formatearDiaCorto } from '@/utils/fecha';
+import type { RuedaDeNegocios } from '@/utils/ruedasDeNegocios';
 
 interface Props {
   id: string;
@@ -10,9 +13,10 @@ interface Props {
   pais: string;
   sector: string;
   descripcionBreve: string;
+  ruedaDeNegocios?: RuedaDeNegocios;
 }
 
-const { id, nombre, rubroNombre, rubroColor, pais, sector, descripcionBreve } = Astro.props;
+const { id, nombre, rubroNombre, rubroColor, pais, sector, descripcionBreve, ruedaDeNegocios } = Astro.props;
 ---
 
 <article
@@ -23,11 +27,34 @@ const { id, nombre, rubroNombre, rubroColor, pais, sector, descripcionBreve } = 
   data-pais={pais}
 >
   <a class="tarjeta-expositor__enlace" href={withBase(`/expositores/${id}`)}>
-    <PlacaIniciales nombre={nombre} color={rubroColor} class="tarjeta-expositor__placa" />
-    <div class="tarjeta-expositor__cuerpo">
-      <p class="tarjeta-expositor__nombre">{nombre}</p>
-      <p class="tarjeta-expositor__meta">{rubroNombre} · {pais} · Sector {sector}</p>
-      <p class="tarjeta-expositor__descripcion">{descripcionBreve}</p>
+    <div class="tarjeta-expositor__cabecera">
+      <div class="tarjeta-expositor__placa">
+        <PlacaIniciales nombre={nombre} color={rubroColor} />
+      </div>
+      <div>
+        <p class="tarjeta-expositor__nombre">{nombre}</p>
+        <p class="tarjeta-expositor__rubro">{rubroNombre}</p>
+      </div>
+    </div>
+
+    <p class="tarjeta-expositor__descripcion">{descripcionBreve}</p>
+
+    {ruedaDeNegocios && (
+      <p class="tarjeta-expositor__rueda">
+        <DatoIcon tipo="fecha" class="tarjeta-expositor__rueda-icono" />
+        Rueda de negocios · {formatearDiaCorto(ruedaDeNegocios.dia)}
+      </p>
+    )}
+
+    <div class="tarjeta-expositor__datos">
+      <span class="tarjeta-expositor__dato">
+        <DatoIcon tipo="pais" class="tarjeta-expositor__dato-icono" />
+        {pais}
+      </span>
+      <span class="tarjeta-expositor__dato">
+        <DatoIcon tipo="sector" class="tarjeta-expositor__dato-icono" />
+        Sector {sector}
+      </span>
     </div>
   </a>
 </article>
@@ -36,6 +63,7 @@ const { id, nombre, rubroNombre, rubroColor, pais, sector, descripcionBreve } = 
   .tarjeta-expositor {
     border-left: 4px solid var(--color-violeta);
     background: var(--color-fondo-alterno);
+    height: 100%;
   }
 
   .tarjeta-expositor--turquesa {
@@ -56,14 +84,21 @@ const { id, nombre, rubroNombre, rubroColor, pais, sector, descripcionBreve } = 
 
   .tarjeta-expositor__enlace {
     display: flex;
-    gap: var(--space-4);
+    flex-direction: column;
+    gap: var(--space-3);
     padding: var(--space-4);
     text-decoration: none;
     height: 100%;
   }
 
+  .tarjeta-expositor__cabecera {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
   .tarjeta-expositor__placa {
-    width: 3.5rem;
+    width: 2.5rem;
     flex-shrink: 0;
   }
 
@@ -72,16 +107,63 @@ const { id, nombre, rubroNombre, rubroColor, pais, sector, descripcionBreve } = 
     color: var(--color-titulo);
   }
 
-  .tarjeta-expositor__meta {
+  .tarjeta-expositor__rubro {
     font-size: var(--texto-sm);
     color: var(--color-enlace);
     font-weight: var(--peso-semibold);
-    margin-top: var(--space-1);
   }
 
   .tarjeta-expositor__descripcion {
     font-size: var(--texto-sm);
     color: var(--color-texto);
-    margin-top: var(--space-2);
+  }
+
+  .tarjeta-expositor__rueda {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    align-self: flex-start;
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+    background: color-mix(in srgb, var(--color-turquesa) 25%, var(--color-blanco));
+    padding: var(--space-1) var(--space-3);
+  }
+
+  /*
+    :global() a propósito: DatoIcon renderiza su propio <svg> como raíz, y
+    Astro no propaga el atributo de scope del padre a la raíz de un
+    componente hijo aunque reciba la clase por prop. Sin :global() esta
+    regla nunca matchea y el ícono queda con su tamaño intrínseco (~80px
+    en vez de 1rem). Ver DECISIONES.md.
+  */
+  :global(.tarjeta-expositor__rueda-icono) {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .tarjeta-expositor__datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin-top: auto;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .tarjeta-expositor__dato {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+  }
+
+  :global(.tarjeta-expositor__dato-icono) {
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-purpura);
+    flex-shrink: 0;
   }
 </style>

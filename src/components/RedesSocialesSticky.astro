@@ -1,0 +1,69 @@
+---
+// Misma decisión que el footer (ver DECISIONES.md, Bloque 1): sin cuentas
+// oficiales confirmadas todavía, así que se muestra el diseño del acceso a
+// redes sin simular enlaces reales. Se repite acá, en una barra fija, para
+// que las redes tengan presencia además de en el pie de página — pedido
+// explícito de diseño, no un enlace funcional nuevo.
+const redes = ['Instagram', 'Facebook', 'LinkedIn'];
+---
+
+<div class="redes-sticky" aria-label="Redes sociales de ExpoJuy (próximamente)">
+  <span class="redes-sticky__linea" aria-hidden="true"></span>
+  <ul class="redes-sticky__lista">
+    {redes.map((red) => (
+      <li>
+        <span class="redes-sticky__item" title={`${red} — cuenta oficial a confirmar`}>
+          <svg width="16" height="16" viewBox="0 0 18 18" aria-hidden="true">
+            <rect x="1" y="1" width="7" height="7" fill="var(--color-turquesa)" />
+            <rect x="10" y="1" width="7" height="16" fill="var(--color-lila)" />
+            <rect x="1" y="10" width="7" height="7" fill="var(--color-violeta)" />
+          </svg>
+          <span class="solo-lectores-pantalla">{red} (próximamente)</span>
+        </span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .redes-sticky {
+    display: none;
+  }
+
+  @media (min-width: 1200px) {
+    .redes-sticky {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+      position: fixed;
+      right: var(--space-4);
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: var(--z-header);
+    }
+
+    .redes-sticky__linea {
+      width: 1px;
+      height: var(--space-6);
+      background: var(--color-borde-ui);
+    }
+
+    .redes-sticky__lista {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .redes-sticky__item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      background: var(--color-fondo);
+      border: 1px solid var(--color-borde-ui);
+      cursor: default;
+    }
+  }
+</style>

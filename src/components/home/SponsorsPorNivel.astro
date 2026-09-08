@@ -21,7 +21,7 @@ const colorPorNivel: Record<(typeof niveles)[number], 'turquesa' | 'violeta' | '
     if (deEsteNivel.length === 0) return null;
     return (
       <div class={`sponsors__fila sponsors__fila--${nivel.toLowerCase()}`}>
-        <span class="sponsors__nivel">{nivel}</span>
+        <span class="solo-lectores-pantalla">Nivel {nivel}:</span>
         <ul class="sponsors__lista">
           {deEsteNivel.map((s) => (
             <li class="sponsors__item">
@@ -45,21 +45,12 @@ const colorPorNivel: Record<(typeof niveles)[number], 'turquesa' | 'violeta' | '
   }
 
   .sponsors__fila {
-    display: grid;
-    grid-template-columns: 7rem 1fr;
-    align-items: center;
-    gap: var(--space-5);
     padding-block: var(--space-5);
     border-top: 1px solid var(--color-borde-ui);
   }
 
   .sponsors__fila:last-child {
     border-bottom: 1px solid var(--color-borde-ui);
-  }
-
-  .sponsors__nivel {
-    font-weight: var(--peso-bold);
-    color: var(--color-titulo);
   }
 
   .sponsors__lista {
@@ -88,10 +79,4 @@ const colorPorNivel: Record<(typeof niveles)[number], 'turquesa' | 'violeta' | '
     width: 4.5rem;
   }
 
-  @media (max-width: 767px) {
-    .sponsors__fila {
-      grid-template-columns: 1fr;
-      gap: var(--space-3);
-    }
-  }
 </style>

@@ -1,12 +1,12 @@
 [
   { "id": "agenda-01", "titulo": "Acto de apertura", "dia": "2026-10-09", "horarioInicio": "10:00", "horarioFin": "10:45", "espacio": "Auditorio Principal", "tipo": "apertura", "orador": "Orador Demo 01" },
   { "id": "agenda-02", "titulo": "Panorama del comercio exterior argentino", "dia": "2026-10-09", "horarioInicio": "11:00", "horarioFin": "12:00", "espacio": "Auditorio Principal", "tipo": "charla", "orador": "Orador Demo 02" },
-  { "id": "agenda-03", "titulo": "Rueda de negocios: Minería y Energía", "dia": "2026-10-09", "horarioInicio": "14:00", "horarioFin": "17:00", "espacio": "Patio de Rondas de Negocios", "tipo": "rueda-de-negocios" },
+  { "id": "agenda-03", "titulo": "Rueda de negocios: Minería y Energía", "dia": "2026-10-09", "horarioInicio": "14:00", "horarioFin": "17:00", "espacio": "Patio de Rondas de Negocios", "tipo": "rueda-de-negocios", "rubros": ["mineria", "energia"] },
   { "id": "agenda-04", "titulo": "Networking de bienvenida", "dia": "2026-10-09", "horarioInicio": "18:00", "horarioFin": "20:00", "espacio": "Hall Central", "tipo": "networking" },
 
   { "id": "agenda-05", "titulo": "Oportunidades de inversión en el NOA", "dia": "2026-10-10", "horarioInicio": "10:00", "horarioFin": "11:15", "espacio": "Auditorio Principal", "tipo": "panel", "orador": "Orador Demo 03" },
   { "id": "agenda-06", "titulo": "Cómo exportar por primera vez", "dia": "2026-10-10", "horarioInicio": "11:30", "horarioFin": "13:00", "espacio": "Sala A", "tipo": "taller", "orador": "Orador Demo 04" },
-  { "id": "agenda-07", "titulo": "Rueda de negocios: Agroindustria y Textil", "dia": "2026-10-10", "horarioInicio": "14:00", "horarioFin": "17:00", "espacio": "Patio de Rondas de Negocios", "tipo": "rueda-de-negocios" },
+  { "id": "agenda-07", "titulo": "Rueda de negocios: Agroindustria y Textil", "dia": "2026-10-10", "horarioInicio": "14:00", "horarioFin": "17:00", "espacio": "Patio de Rondas de Negocios", "tipo": "rueda-de-negocios", "rubros": ["agroindustria", "textil"] },
   { "id": "agenda-08", "titulo": "Financiamiento para pymes exportadoras", "dia": "2026-10-10", "horarioInicio": "16:00", "horarioFin": "17:00", "espacio": "Sala B", "tipo": "charla", "orador": "Orador Demo 05" },
 
   { "id": "agenda-09", "titulo": "Logística bioceánica y pasos fronterizos", "dia": "2026-10-12", "horarioInicio": "10:00", "horarioFin": "11:15", "espacio": "Sala A", "tipo": "panel", "orador": "Orador Demo 06" },

@@ -97,7 +97,8 @@ function contarPorRubro(rubroId: string) {
     border-color: var(--color-purpura);
   }
 
-  .buscador-teaser__icono {
+  /* :global(): RubroIcon renderiza su propio <svg> raíz, ver DECISIONES.md */
+  :global(.buscador-teaser__icono) {
     width: 2.5rem;
     height: 2.5rem;
     color: var(--color-purpura);
