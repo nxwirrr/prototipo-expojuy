@@ -1,0 +1,10 @@
+# Evita que git normalice finales de línea en archivos binarios (con
+# core.autocrlf=true en Windows, sin esto se corren el riesgo de corromper
+# el contenido si alguna vez no se detectan como binarios automáticamente).
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
+*.ico binary
