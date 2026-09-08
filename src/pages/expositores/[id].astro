@@ -1,0 +1,188 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PlacaIniciales from '@/components/PlacaIniciales.astro';
+import RubroIcon from '@/components/icons/RubroIcon.astro';
+import { withBase } from '@/utils/url';
+
+export async function getStaticPaths() {
+  const expositores = await getCollection('expositores');
+  return expositores.map((expositor) => ({
+    params: { id: expositor.id },
+    props: { expositor },
+  }));
+}
+
+const { expositor } = Astro.props;
+const rubros = await getCollection('rubros');
+const rubro = rubros.find((r) => r.data.id === expositor.data.rubro)?.data;
+
+const otrosDelRubro = (await getCollection('expositores'))
+  .filter((e) => e.data.rubro === expositor.data.rubro && e.id !== expositor.id)
+  .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'))
+  .slice(0, 3);
+---
+
+<BaseLayout
+  title={expositor.data.nombre}
+  description={expositor.data.descripcionBreve}
+>
+  <section class="contenedor ficha-expositor">
+    <nav class="ficha-expositor__migas" aria-label="Ruta de navegación">
+      <a href={withBase('/expositores')}>Expositores</a> / <span>{expositor.data.nombre}</span>
+    </nav>
+
+    <div class="ficha-expositor__encabezado">
+      <PlacaIniciales
+        nombre={expositor.data.nombre}
+        color={rubro?.color ?? 'violeta'}
+        class="ficha-expositor__placa"
+      />
+      <div>
+        <h1>{expositor.data.nombre}</h1>
+        <p class="ficha-expositor__meta">
+          {expositor.data.pais} · Sector {expositor.data.sector}
+        </p>
+      </div>
+    </div>
+
+    <div class="ficha-expositor__cuerpo">
+      <div class="ficha-expositor__principal">
+        <h2>Sobre la empresa</h2>
+        <p>{expositor.data.descripcionBreve}</p>
+
+        {expositor.data.web && (
+          <p>
+            <a href={expositor.data.web} rel="noopener">Sitio web</a>
+          </p>
+        )}
+      </div>
+
+      <aside class="ficha-expositor__aside" aria-labelledby="titulo-rubro-relacionado">
+        {rubro && (
+          <a class="ficha-expositor__rubro" href={`${withBase('/expositores')}?rubro=${rubro.id}`}>
+            <RubroIcon icono={rubro.icono} class="ficha-expositor__rubro-icono" />
+            <span>
+              <span id="titulo-rubro-relacionado" class="ficha-expositor__rubro-etiqueta">Rubro</span>
+              <span class="ficha-expositor__rubro-nombre">{rubro.nombre}</span>
+            </span>
+          </a>
+        )}
+
+        {otrosDelRubro.length > 0 && (
+          <div class="ficha-expositor__relacionados">
+            <h2>Otras empresas del rubro</h2>
+            <ul>
+              {otrosDelRubro.map((otro) => (
+                <li>
+                  <a href={withBase(`/expositores/${otro.id}`)}>{otro.data.nombre}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ficha-expositor {
+    padding-block: var(--space-7) var(--space-9);
+  }
+
+  .ficha-expositor__migas {
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    margin-bottom: var(--space-6);
+  }
+
+  .ficha-expositor__encabezado {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    margin-bottom: var(--space-7);
+  }
+
+  .ficha-expositor__placa {
+    width: 5rem;
+    flex-shrink: 0;
+  }
+
+  .ficha-expositor__meta {
+    color: var(--color-texto);
+    margin-top: var(--space-2);
+  }
+
+  .ficha-expositor__cuerpo {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .ficha-expositor__principal h2 {
+    margin-bottom: var(--space-3);
+  }
+
+  .ficha-expositor__principal p {
+    color: var(--color-texto);
+    max-width: 60ch;
+  }
+
+  .ficha-expositor__principal p + p {
+    margin-top: var(--space-4);
+  }
+
+  .ficha-expositor__aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .ficha-expositor__rubro {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--color-fondo-alterno);
+    text-decoration: none;
+  }
+
+  .ficha-expositor__rubro-icono {
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-purpura);
+    flex-shrink: 0;
+  }
+
+  .ficha-expositor__rubro-etiqueta {
+    display: block;
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+  }
+
+  .ficha-expositor__rubro-nombre {
+    display: block;
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+  }
+
+  .ficha-expositor__relacionados h2 {
+    font-size: var(--texto-md);
+    margin-bottom: var(--space-3);
+  }
+
+  .ficha-expositor__relacionados ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    border-top: 1px solid var(--color-borde-ui);
+    padding-top: var(--space-3);
+  }
+
+  @media (max-width: 767px) {
+    .ficha-expositor__cuerpo {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

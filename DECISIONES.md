@@ -227,6 +227,47 @@ memoria descriptiva final.
   el motivo modular para un solo protagonismo por pantalla en vez de
   aplicarlo a todo.
 
+## Expositores (Bloque 4)
+
+- **La lista completa de 24 expositores se renderiza siempre en el HTML**,
+  ordenada alfabéticamente. Los filtros (nombre, país, rubro) son
+  JavaScript puro sobre esa misma lista ya presente en el DOM: sin JS se ve
+  todo (eso es "funciona sin JavaScript en su forma básica" según el
+  pliego); con JS se pueden combinar los tres filtros a la vez.
+- **Rubro = grid de casillas de verificación con ícono** (no un
+  `<select>`), multi-selección, tal como pide el pliego. **País = `<select>`**
+  nativo de una sola selección: son ~12 países y un desplegable es más
+  compacto que otro grid, y además diferencia visualmente los dos tipos de
+  filtro.
+- **La ficha individual** (`/expositores/[id]`) usa `getStaticPaths()` sobre
+  la colección: se generan las 24 páginas en el build. Muestra el rubro con
+  enlace de vuelta al buscador ya filtrado, y hasta 3 "otras empresas del
+  mismo rubro" como enlaces cruzados.
+- **El teaser de la home ahora sí conecta con el buscador real:** el enlace
+  `?rubro=<id>` que arma `BuscadorExpositoresTeaser` (Bloque 3) se lee en
+  esta página al cargar y pre-marca el checkbox correspondiente automática
+  mente (comparando por `id` de rubro, no por nombre visible, para no
+  depender de coincidencias de texto).
+
+### Bug de sitio completo encontrado al probar la navegación por clics
+
+Hasta este bloque sólo se había probado tipeando URLs a mano (con barra
+final). Al probar clics reales en enlaces internos apareció un 404: **todo
+enlace generado por `withBase()` daba 404** porque `astro.config.mjs` tiene
+`trailingSlash: 'always'` pero `withBase()` nunca agregaba la barra final.
+Es decir, el nav del header, el footer, los teasers de la home — cada
+enlace interno del sitio construido hasta acá apuntaba a una URL sin barra
+que el propio server de desarrollo (y potencialmente el hosting de
+producción) no resuelve. Se corrigió en un único lugar
+(`src/utils/url.ts`), que ahora garantiza la barra final siempre. Se
+verificó reconstruyendo el sitio y chequeando mediante un script
+(`check-links.mjs`, descartado luego de usarlo) que ningún enlace generado
+por páginas ya existentes apunte a una ruta inexistente en `dist/`.
+
+**Lección para los bloques que siguen:** no alcanza con tipear URLs a mano
+para verificar — hay que probar navegando por los enlaces reales del sitio
+(clic en nav, footer, CTAs) para que este tipo de bug aparezca.
+
 ## Pendiente / a confirmar antes de la entrega
 
 - `astro.config.mjs` tiene `site`/`base` con placeholders (`<usuario>/<repo>`):

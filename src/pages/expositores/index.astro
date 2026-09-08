@@ -1,0 +1,326 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import RubroIcon from '@/components/icons/RubroIcon.astro';
+import TarjetaExpositor from '@/components/TarjetaExpositor.astro';
+
+const rubros = (await getCollection('rubros')).sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'));
+const expositores = await getCollection('expositores');
+const rubroPorId = new Map(rubros.map((r) => [r.data.id, r.data]));
+
+const paises = [...new Set(expositores.map((e) => e.data.pais))].sort((a, b) => a.localeCompare(b, 'es'));
+
+const expositoresOrdenados = [...expositores].sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'));
+---
+
+<BaseLayout
+  title="Expositores"
+  description="Buscá entre las empresas expositoras de ExpoJuy 2026 por nombre, rubro o país de origen."
+>
+  <section class="contenedor expositores-cabecera">
+    <h1>Expositores</h1>
+    <p>
+      {expositores.length} empresas de comercio exterior, organizadas en {rubros.length} rubros y varios
+      países. Buscá por nombre o combiná los filtros de rubro y país.
+    </p>
+  </section>
+
+  <section class="contenedor expositores-filtros" aria-labelledby="titulo-filtros">
+    <h2 id="titulo-filtros" class="solo-lectores-pantalla">Filtrar expositores</h2>
+
+    <div class="expositores-filtros__busqueda">
+      <label for="filtro-nombre">Buscar por nombre</label>
+      <input
+        type="search"
+        id="filtro-nombre"
+        placeholder="Ej: Empresa Demo 01"
+        data-filtro-nombre
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="expositores-filtros__pais">
+      <label for="filtro-pais">País</label>
+      <select id="filtro-pais" data-filtro-pais>
+        <option value="">Todos los países</option>
+        {paises.map((pais) => (
+          <option value={pais}>{pais}</option>
+        ))}
+      </select>
+    </div>
+
+    <fieldset class="expositores-filtros__rubros">
+      <legend>Rubro</legend>
+      <div class="expositores-filtros__grilla">
+        {rubros.map((rubro) => (
+          <label class="filtro-rubro">
+            <input type="checkbox" value={rubro.data.nombre} data-filtro-rubro data-rubro-id={rubro.data.id} />
+            <span class="filtro-rubro__tarjeta">
+              <RubroIcon icono={rubro.data.icono} class="filtro-rubro__icono" />
+              <span class="filtro-rubro__nombre">{rubro.data.nombre}</span>
+            </span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+
+    <button type="button" class="expositores-filtros__limpiar" data-limpiar-filtros hidden>
+      Limpiar filtros
+    </button>
+  </section>
+
+  <section class="contenedor expositores-resultados" aria-labelledby="titulo-resultados">
+    <div class="expositores-resultados__conteo" data-conteo-resultados role="status">
+      Mostrando {expositoresOrdenados.length} de {expositoresOrdenados.length} expositores
+    </div>
+    <h2 id="titulo-resultados" class="solo-lectores-pantalla">Resultados</h2>
+
+    <p class="expositores-resultados__vacio" data-sin-resultados hidden>
+      No encontramos expositores con esos filtros. Probá con otra combinación.
+    </p>
+
+    <div class="expositores-resultados__grilla" data-lista-expositores>
+      {expositoresOrdenados.map((expositor) => {
+        const rubro = rubroPorId.get(expositor.data.rubro);
+        return (
+          <TarjetaExpositor
+            id={expositor.id}
+            nombre={expositor.data.nombre}
+            rubroNombre={rubro?.nombre ?? expositor.data.rubro}
+            rubroColor={rubro?.color ?? 'violeta'}
+            pais={expositor.data.pais}
+            sector={expositor.data.sector}
+            descripcionBreve={expositor.data.descripcionBreve}
+          />
+        );
+      })}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .expositores-cabecera {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .expositores-cabecera p {
+    color: var(--color-texto);
+    max-width: 65ch;
+    margin-top: var(--space-3);
+  }
+
+  .expositores-filtros {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5) var(--space-6);
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--color-borde-ui);
+    border-bottom: 1px solid var(--color-borde-ui);
+  }
+
+  .expositores-filtros label {
+    display: block;
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+    margin-bottom: var(--space-2);
+  }
+
+  .expositores-filtros__busqueda input,
+  .expositores-filtros__pais select {
+    width: 100%;
+    min-height: var(--area-tactil-min);
+    padding-inline: var(--space-4);
+    border: 2px solid var(--color-borde-ui);
+    border-radius: var(--radio-control);
+    background: var(--color-fondo);
+    color: var(--color-texto);
+    font-size: var(--texto-base);
+  }
+
+  .expositores-filtros__busqueda input:focus-visible,
+  .expositores-filtros__pais select:focus-visible {
+    border-color: var(--color-foco);
+  }
+
+  .expositores-filtros__rubros {
+    grid-column: 1 / -1;
+    border: none;
+    padding: 0;
+  }
+
+  .expositores-filtros__rubros legend {
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+    margin-bottom: var(--space-3);
+    padding: 0;
+  }
+
+  .expositores-filtros__grilla {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+  }
+
+  .filtro-rubro {
+    display: block;
+    cursor: pointer;
+  }
+
+  .filtro-rubro input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  .filtro-rubro__tarjeta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    text-align: center;
+    padding: var(--space-4) var(--space-3);
+    background: var(--color-fondo-alterno);
+    border: 2px solid transparent;
+    min-height: var(--area-tactil-min);
+  }
+
+  .filtro-rubro__icono {
+    width: 2rem;
+    height: 2rem;
+    color: var(--color-purpura);
+  }
+
+  .filtro-rubro__nombre {
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+  }
+
+  .filtro-rubro input:checked + .filtro-rubro__tarjeta {
+    border-color: var(--color-purpura);
+    background: color-mix(in srgb, var(--color-purpura) 10%, var(--color-blanco));
+  }
+
+  .filtro-rubro input:focus-visible + .filtro-rubro__tarjeta {
+    outline: 3px solid var(--color-foco);
+    outline-offset: 2px;
+  }
+
+  .expositores-filtros__limpiar {
+    grid-column: 1 / -1;
+    justify-self: start;
+    font-weight: var(--peso-semibold);
+    color: var(--color-enlace);
+    text-decoration: underline;
+    padding: var(--space-2) 0;
+    min-height: var(--area-tactil-min);
+  }
+
+  .expositores-resultados {
+    padding-block: var(--space-6) var(--space-9);
+  }
+
+  .expositores-resultados__conteo {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+    margin-bottom: var(--space-5);
+  }
+
+  .expositores-resultados__vacio {
+    color: var(--color-texto);
+    padding-block: var(--space-6);
+  }
+
+  .expositores-resultados__grilla {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 1199px) {
+    .expositores-filtros {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .expositores-filtros__grilla {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .expositores-resultados__grilla {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const contenedor = document.querySelector<HTMLElement>('[data-lista-expositores]');
+  const tarjetas = [...document.querySelectorAll<HTMLElement>('[data-tarjeta-expositor]')];
+  const inputNombre = document.querySelector<HTMLInputElement>('[data-filtro-nombre]');
+  const selectPais = document.querySelector<HTMLSelectElement>('[data-filtro-pais]');
+  const checksRubro = [...document.querySelectorAll<HTMLInputElement>('[data-filtro-rubro]')];
+  const conteo = document.querySelector<HTMLElement>('[data-conteo-resultados]');
+  const sinResultados = document.querySelector<HTMLElement>('[data-sin-resultados]');
+  const botonLimpiar = document.querySelector<HTMLButtonElement>('[data-limpiar-filtros]');
+
+  const normalizar = (texto: string) =>
+    texto
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\p{Diacritic}]/gu, '');
+
+  function leerParametrosDeUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    const rubroId = params.get('rubro');
+    if (q && inputNombre) inputNombre.value = q;
+    if (rubroId) {
+      const checkbox = checksRubro.find((chk) => chk.dataset.rubroId === rubroId);
+      if (checkbox) checkbox.checked = true;
+    }
+  }
+
+  function aplicarFiltros() {
+    const textoNombre = normalizar(inputNombre?.value.trim() ?? '');
+    const paisSeleccionado = selectPais?.value ?? '';
+    const rubrosSeleccionados = checksRubro.filter((c) => c.checked).map((c) => c.value);
+
+    let visibles = 0;
+
+    tarjetas.forEach((tarjeta) => {
+      const nombre = normalizar(tarjeta.dataset.nombre ?? '');
+      const rubro = tarjeta.dataset.rubro ?? '';
+      const pais = tarjeta.dataset.pais ?? '';
+
+      const coincideNombre = textoNombre === '' || nombre.includes(textoNombre);
+      const coincidePais = paisSeleccionado === '' || pais === paisSeleccionado;
+      const coincideRubro = rubrosSeleccionados.length === 0 || rubrosSeleccionados.includes(rubro);
+
+      const visible = coincideNombre && coincidePais && coincideRubro;
+      tarjeta.hidden = !visible;
+      if (visible) visibles += 1;
+    });
+
+    if (conteo) conteo.textContent = `Mostrando ${visibles} de ${tarjetas.length} expositores`;
+    if (sinResultados) sinResultados.hidden = visibles !== 0;
+
+    const hayFiltrosActivos = textoNombre !== '' || paisSeleccionado !== '' || rubrosSeleccionados.length > 0;
+    if (botonLimpiar) botonLimpiar.hidden = !hayFiltrosActivos;
+  }
+
+  inputNombre?.addEventListener('input', aplicarFiltros);
+  selectPais?.addEventListener('change', aplicarFiltros);
+  checksRubro.forEach((chk) => chk.addEventListener('change', aplicarFiltros));
+  botonLimpiar?.addEventListener('click', () => {
+    if (inputNombre) inputNombre.value = '';
+    if (selectPais) selectPais.value = '';
+    checksRubro.forEach((chk) => (chk.checked = false));
+    aplicarFiltros();
+  });
+
+  leerParametrosDeUrl();
+  aplicarFiltros();
+</script>

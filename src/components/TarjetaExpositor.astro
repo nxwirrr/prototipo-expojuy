@@ -1,0 +1,87 @@
+---
+import PlacaIniciales from '@/components/PlacaIniciales.astro';
+import { withBase } from '@/utils/url';
+
+interface Props {
+  id: string;
+  nombre: string;
+  rubroNombre: string;
+  rubroColor: 'turquesa' | 'violeta' | 'purpura' | 'lila';
+  pais: string;
+  sector: string;
+  descripcionBreve: string;
+}
+
+const { id, nombre, rubroNombre, rubroColor, pais, sector, descripcionBreve } = Astro.props;
+---
+
+<article
+  class={`tarjeta-expositor tarjeta-expositor--${rubroColor}`}
+  data-tarjeta-expositor
+  data-nombre={nombre.toLowerCase()}
+  data-rubro={rubroNombre}
+  data-pais={pais}
+>
+  <a class="tarjeta-expositor__enlace" href={withBase(`/expositores/${id}`)}>
+    <PlacaIniciales nombre={nombre} color={rubroColor} class="tarjeta-expositor__placa" />
+    <div class="tarjeta-expositor__cuerpo">
+      <p class="tarjeta-expositor__nombre">{nombre}</p>
+      <p class="tarjeta-expositor__meta">{rubroNombre} · {pais} · Sector {sector}</p>
+      <p class="tarjeta-expositor__descripcion">{descripcionBreve}</p>
+    </div>
+  </a>
+</article>
+
+<style>
+  .tarjeta-expositor {
+    border-left: 4px solid var(--color-violeta);
+    background: var(--color-fondo-alterno);
+  }
+
+  .tarjeta-expositor--turquesa {
+    border-left-color: var(--color-turquesa);
+  }
+
+  .tarjeta-expositor--violeta {
+    border-left-color: var(--color-violeta);
+  }
+
+  .tarjeta-expositor--purpura {
+    border-left-color: var(--color-purpura);
+  }
+
+  .tarjeta-expositor--lila {
+    border-left-color: var(--color-lila);
+  }
+
+  .tarjeta-expositor__enlace {
+    display: flex;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    text-decoration: none;
+    height: 100%;
+  }
+
+  .tarjeta-expositor__placa {
+    width: 3.5rem;
+    flex-shrink: 0;
+  }
+
+  .tarjeta-expositor__nombre {
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+  }
+
+  .tarjeta-expositor__meta {
+    font-size: var(--texto-sm);
+    color: var(--color-enlace);
+    font-weight: var(--peso-semibold);
+    margin-top: var(--space-1);
+  }
+
+  .tarjeta-expositor__descripcion {
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    margin-top: var(--space-2);
+  }
+</style>
