@@ -257,7 +257,6 @@ const expositoresOrdenados = [...expositores].sort((a, b) => a.data.nombre.local
 </style>
 
 <script>
-  const contenedor = document.querySelector<HTMLElement>('[data-lista-expositores]');
   const tarjetas = [...document.querySelectorAll<HTMLElement>('[data-tarjeta-expositor]')];
   const inputNombre = document.querySelector<HTMLInputElement>('[data-filtro-nombre]');
   const selectPais = document.querySelector<HTMLSelectElement>('[data-filtro-pais]');

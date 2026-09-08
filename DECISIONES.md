@@ -268,11 +268,46 @@ por páginas ya existentes apunte a una ruta inexistente en `dist/`.
 para verificar — hay que probar navegando por los enlaces reales del sitio
 (clic en nav, footer, CTAs) para que este tipo de bug aparezca.
 
+## Mapa del predio (Bloque 5)
+
+- **El plano es un esquema propio, no un relevamiento del edificio real.**
+  No había un plano oficial de la Ciudad Cultural disponible para este
+  prototipo; se construyó un layout esquemático (grilla de 8 sectores +
+  espacios comunes con los mismos nombres que usa `agenda.json`: Auditorio
+  Principal, Sala A, Sala B, Hall Central, Patio de Rondas de Negocios) que
+  demuestra el patrón de interacción — que es el diferencial pedido — sin
+  pretender ser una copia exacta del predio. Hay que reemplazarlo por un
+  plano real si el organismo lo provee.
+- **Un sector = un rubro**, con la misma letra (A–H) que ya se definió en
+  `utils/rubros.ts` para el campo `sector` de cada expositor (Bloque 2).
+  Elegir o enfocar un sector muestra el rubro y sus expositores, cruzando en
+  vivo contra la colección `expositores` — no son datos hardcodeados en el
+  mapa.
+- **Accesibilidad del mapa:** cada sector es un `<g>` con
+  `tabindex="0" role="button" aria-label="Sector X: Rubro, N expositores"`,
+  activable con clic, Enter o Espacio. Se probó con presión real de Tab (no
+  sólo `element.focus()` por script, que en Chromium no siempre dispara
+  `:focus-visible`) para confirmar que el anillo de foco aparece con
+  navegación de teclado real.
+- **El mismo contenido, dos formas de consumirlo:** debajo del mapa hay un
+  acordeón (`<details>` nativo) con la misma información sector por sector,
+  siempre presente en el HTML. Es la forma en que esta página cumple
+  "accesible sin depender de la interacción espacial": el mapa es la capa
+  interactiva/visual, el acordeón es el equivalente lineal que no depende
+  de JavaScript ni de poder interpretar la disposición espacial del SVG.
+- **Los íconos de rubro no se repitieron en el mapa.** Ya cumplen su rol en
+  la grilla de filtros de `/expositores`; en el mapa alcanza con
+  letra + nombre + conteo, y evita el trabajo (y el riesgo de bugs de
+  tamaño) de anidar `<svg>` dentro de otro `<svg>`.
+
 ## Pendiente / a confirmar antes de la entrega
 
-- `astro.config.mjs` tiene `site`/`base` con placeholders (`<usuario>/<repo>`):
-  hay que completarlos con el repositorio real de GitHub Pages antes del
-  deploy (ver README).
+- `astro.config.mjs` tiene `site`/`base` con placeholders
+  (`REEMPLAZAR-USUARIO`/`REEMPLAZAR-REPO`): hay que completarlos con el
+  repositorio real de GitHub Pages antes del deploy (ver README).
 - Los enlaces de redes sociales en el footer se muestran como diseño (íconos
   + nombre) sin URL real, porque no hay cuentas oficiales confirmadas: no se
   quiso inventar enlaces que aparenten ser reales.
+- El mapa del predio (Bloque 5) usa un plano esquemático propio, no un
+  relevamiento real de la Ciudad Cultural: reemplazar por el plano oficial
+  si el organismo lo facilita.

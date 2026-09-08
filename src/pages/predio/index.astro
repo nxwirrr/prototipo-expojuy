@@ -1,0 +1,57 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PredioMapa from '@/components/predio/PredioMapa.astro';
+import SectoresAccordion from '@/components/predio/SectoresAccordion.astro';
+---
+
+<BaseLayout
+  title="El predio"
+  description="Mapa interactivo del predio de ExpoJuy 2026: elegí un sector y descubrí qué empresas exponen en cada rubro."
+>
+  <section class="contenedor predio-cabecera">
+    <h1>El predio</h1>
+    <p>
+      La Ciudad Cultural organiza a las empresas expositoras en ocho sectores, uno por rubro.
+      Elegí un sector del mapa (con mouse o teclado) para ver qué empresas exponen ahí.
+    </p>
+  </section>
+
+  <section class="contenedor predio-mapa-seccion" aria-labelledby="titulo-mapa">
+    <h2 id="titulo-mapa" class="solo-lectores-pantalla">Mapa interactivo por sector</h2>
+    <PredioMapa />
+  </section>
+
+  <section class="contenedor predio-lista-seccion" aria-labelledby="titulo-lista">
+    <h2 id="titulo-lista">Sectores, en detalle</h2>
+    <p class="predio-lista-seccion__nota">La misma información del mapa, en formato de lista.</p>
+    <SectoresAccordion />
+  </section>
+</BaseLayout>
+
+<style>
+  .predio-cabecera {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .predio-cabecera p {
+    color: var(--color-texto);
+    max-width: 65ch;
+    margin-top: var(--space-3);
+  }
+
+  .predio-mapa-seccion {
+    padding-block: var(--space-6);
+  }
+
+  .predio-lista-seccion {
+    padding-block: var(--space-7) var(--space-9);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .predio-lista-seccion__nota {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-5);
+  }
+</style>

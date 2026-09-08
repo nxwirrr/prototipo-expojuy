@@ -1,0 +1,109 @@
+---
+// Misma información que el mapa interactivo, en formato lista: garantiza
+// que los datos se puedan consultar sin JavaScript y sin depender de la
+// interacción espacial (accesibilidad + progressive enhancement, mismo
+// criterio que el buscador de expositores).
+import { getCollection } from 'astro:content';
+import { withBase } from '@/utils/url';
+import { ORDEN_RUBROS_POR_SECTOR, LETRA_SECTOR_POR_RUBRO } from '@/utils/rubros';
+
+const rubrosCollection = await getCollection('rubros');
+const rubroPorId = new Map(rubrosCollection.map((r) => [r.data.id, r.data]));
+const expositores = await getCollection('expositores');
+
+const sectores = ORDEN_RUBROS_POR_SECTOR.map((rubroId) => {
+  const rubro = rubroPorId.get(rubroId);
+  const deEsteRubro = expositores
+    .filter((e) => e.data.rubro === rubroId)
+    .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'));
+  return {
+    letra: LETRA_SECTOR_POR_RUBRO[rubroId],
+    nombre: rubro?.nombre ?? rubroId,
+    expositores: deEsteRubro,
+  };
+});
+---
+
+<div class="sectores-accordion">
+  {sectores.map((sector) => (
+    <details class="sectores-accordion__item">
+      <summary class="sectores-accordion__resumen">
+        <span class="sectores-accordion__letra">{sector.letra}</span>
+        <span>{sector.nombre}</span>
+        <span class="sectores-accordion__cantidad">{sector.expositores.length} expositores</span>
+      </summary>
+      <ul class="sectores-accordion__lista">
+        {sector.expositores.map((e) => (
+          <li>
+            <a href={withBase(`/expositores/${e.id}`)}>{e.data.nombre}</a>
+            <span class="sectores-accordion__pais">{e.data.pais}</span>
+          </li>
+        ))}
+      </ul>
+    </details>
+  ))}
+</div>
+
+<style>
+  .sectores-accordion__item {
+    border-top: 1px solid var(--color-borde-ui);
+    padding-block: var(--space-4);
+  }
+
+  .sectores-accordion__item:last-child {
+    border-bottom: 1px solid var(--color-borde-ui);
+  }
+
+  .sectores-accordion__resumen {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+  }
+
+  .sectores-accordion__resumen::-webkit-details-marker {
+    display: none;
+  }
+
+  .sectores-accordion__letra {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    background: var(--color-violeta);
+    color: var(--color-blanco);
+    font-weight: var(--peso-bold);
+  }
+
+  .sectores-accordion__cantidad {
+    margin-left: auto;
+    font-weight: var(--peso-regular);
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+  }
+
+  .sectores-accordion__lista {
+    margin-top: var(--space-4);
+    margin-left: calc(2rem + var(--space-4));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .sectores-accordion__lista li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    max-width: 30rem;
+  }
+
+  .sectores-accordion__pais {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+  }
+</style>

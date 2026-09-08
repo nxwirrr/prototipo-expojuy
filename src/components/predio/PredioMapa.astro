@@ -1,0 +1,303 @@
+---
+import { getCollection } from 'astro:content';
+import { ORDEN_RUBROS_POR_SECTOR, LETRA_SECTOR_POR_RUBRO } from '@/utils/rubros';
+
+const rubrosCollection = await getCollection('rubros');
+const rubroPorId = new Map(rubrosCollection.map((r) => [r.data.id, r.data]));
+const expositores = await getCollection('expositores');
+
+const colorHex: Record<string, string> = {
+  turquesa: 'var(--color-turquesa)',
+  violeta: 'var(--color-violeta)',
+  purpura: 'var(--color-purpura)',
+  lila: 'var(--color-lila)',
+};
+
+const sectores = ORDEN_RUBROS_POR_SECTOR.map((rubroId) => {
+  const rubro = rubroPorId.get(rubroId);
+  const deEsteRubro = expositores.filter((e) => e.data.rubro === rubroId);
+  return {
+    letra: LETRA_SECTOR_POR_RUBRO[rubroId],
+    rubroId,
+    nombre: rubro?.nombre ?? rubroId,
+    color: colorHex[rubro?.color ?? 'violeta'],
+    cantidad: deEsteRubro.length,
+  };
+});
+
+// Posiciones fijas de una grilla de 4x2 (ver DECISIONES.md: plano
+// esquemático propio, no un relevamiento real del predio).
+const posiciones = [
+  { x: 20, y: 20 },
+  { x: 220, y: 20 },
+  { x: 420, y: 20 },
+  { x: 620, y: 20 },
+  { x: 20, y: 180 },
+  { x: 220, y: 180 },
+  { x: 420, y: 180 },
+  { x: 620, y: 180 },
+];
+const ANCHO_SECTOR = 180;
+const ALTO_SECTOR = 140;
+
+const expositoresPorRubro: Record<string, { id: string; nombre: string }[]> = {};
+for (const rubroId of ORDEN_RUBROS_POR_SECTOR) {
+  expositoresPorRubro[rubroId] = expositores
+    .filter((e) => e.data.rubro === rubroId)
+    .sort((a, b) => a.data.nombre.localeCompare(b.data.nombre, 'es'))
+    .map((e) => ({ id: e.id, nombre: e.data.nombre }));
+}
+
+const espaciosComunes = [
+  { nombre: 'Hall Central', x: 20, ancho: 220 },
+  { nombre: 'Auditorio Principal', x: 255, ancho: 180 },
+  { nombre: 'Sala A', x: 450, ancho: 110 },
+  { nombre: 'Sala B', x: 575, ancho: 110 },
+  { nombre: 'Patio de Rondas de Negocios', x: 700, ancho: 100 },
+];
+---
+
+<div class="predio-mapa">
+  <svg
+    class="predio-mapa__svg"
+    viewBox="0 0 820 500"
+    role="group"
+    aria-label="Mapa del predio por sector"
+    data-mapa-predio
+  >
+    {sectores.map((sector, i) => (
+      <g
+        class="predio-mapa__sector"
+        tabindex="0"
+        role="button"
+        aria-pressed="false"
+        aria-label={`Sector ${sector.letra}: ${sector.nombre}, ${sector.cantidad} expositores`}
+        data-sector={sector.rubroId}
+      >
+        <rect
+          x={posiciones[i].x}
+          y={posiciones[i].y}
+          width={ANCHO_SECTOR}
+          height={ALTO_SECTOR}
+          fill={sector.color}
+        />
+        <text x={posiciones[i].x + 16} y={posiciones[i].y + 40} class="predio-mapa__letra">
+          {sector.letra}
+        </text>
+        <text x={posiciones[i].x + 16} y={posiciones[i].y + 90} class="predio-mapa__nombre">
+          {sector.nombre}
+        </text>
+        <text x={posiciones[i].x + 16} y={posiciones[i].y + 114} class="predio-mapa__cantidad">
+          {sector.cantidad} expositores
+        </text>
+      </g>
+    ))}
+
+    {espaciosComunes.map((espacio) => (
+      <g aria-hidden="true">
+        <rect
+          x={espacio.x}
+          y={340}
+          width={espacio.ancho}
+          height={100}
+          class="predio-mapa__comun"
+        />
+        <text x={espacio.x + 10} y={340 + 55} class="predio-mapa__comun-texto">
+          {espacio.nombre}
+        </text>
+      </g>
+    ))}
+
+    <path d="M360 440 A50 50 0 0 0 460 440 Z" class="predio-mapa__entrada" aria-hidden="true" />
+    <text x="410" y="475" text-anchor="middle" class="predio-mapa__entrada-texto" aria-hidden="true">
+      Entrada
+    </text>
+  </svg>
+
+  <div class="predio-mapa__panel" data-panel-sector aria-live="polite">
+    <p class="predio-mapa__panel-vacio">Elegí un sector del mapa para ver qué empresas exponen ahí.</p>
+  </div>
+
+  <script
+    is:inline
+    type="application/json"
+    id="datos-expositores-por-rubro"
+    set:html={JSON.stringify(expositoresPorRubro)}
+  />
+</div>
+
+<style>
+  .predio-mapa {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .predio-mapa__svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .predio-mapa__sector {
+    cursor: pointer;
+  }
+
+  .predio-mapa__sector rect {
+    transition: opacity var(--duracion-rapida) var(--easing-estandar);
+  }
+
+  .predio-mapa__sector:hover rect,
+  .predio-mapa__sector:focus-visible rect {
+    opacity: 0.75;
+  }
+
+  .predio-mapa__sector[aria-pressed='true'] rect {
+    stroke: var(--color-oscuro);
+    stroke-width: 4;
+  }
+
+  .predio-mapa__sector:focus-visible {
+    outline: 3px solid var(--color-purpura);
+    outline-offset: 2px;
+  }
+
+  .predio-mapa__letra {
+    font-family: var(--fuente-base);
+    font-weight: var(--peso-bold);
+    font-size: 28px;
+    fill: var(--color-titulo);
+  }
+
+  .predio-mapa__nombre {
+    font-family: var(--fuente-base);
+    font-weight: var(--peso-semibold);
+    font-size: 13px;
+    fill: var(--color-titulo);
+  }
+
+  .predio-mapa__cantidad {
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    fill: var(--color-titulo);
+    opacity: 0.75;
+  }
+
+  .predio-mapa__comun {
+    fill: var(--color-fondo-alterno);
+    stroke: var(--color-borde-ui);
+    stroke-width: 2;
+  }
+
+  .predio-mapa__comun-texto {
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    font-weight: var(--peso-semibold);
+    fill: var(--color-texto);
+  }
+
+  .predio-mapa__entrada {
+    fill: var(--color-lila);
+  }
+
+  .predio-mapa__entrada-texto {
+    font-family: var(--fuente-base);
+    font-size: 12px;
+    font-weight: var(--peso-semibold);
+    fill: var(--color-titulo);
+  }
+
+  .predio-mapa__panel {
+    background: var(--color-fondo-alterno);
+    padding: var(--space-5);
+    min-height: 220px;
+  }
+
+  .predio-mapa__panel-vacio {
+    color: var(--color-texto);
+  }
+
+  .predio-mapa__panel-titulo {
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+    margin-bottom: var(--space-1);
+  }
+
+  .predio-mapa__panel-cantidad {
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    margin-bottom: var(--space-4);
+  }
+
+  .predio-mapa__panel-lista {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .predio-mapa__panel-lista a {
+    font-weight: var(--peso-semibold);
+  }
+
+  @media (max-width: 1023px) {
+    .predio-mapa {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { withBase } from '@/utils/url';
+
+  interface DatosExpositor {
+    id: string;
+    nombre: string;
+  }
+
+  const panel = document.querySelector<HTMLElement>('[data-panel-sector]');
+  const sectores = [...document.querySelectorAll<SVGGElement>('.predio-mapa__sector')];
+
+  const datosExpositoresPorRubro = JSON.parse(
+    document.getElementById('datos-expositores-por-rubro')?.textContent ?? '{}'
+  ) as Record<string, DatosExpositor[]>;
+
+  function mostrarSector(sector: SVGGElement) {
+    const activoPrevio = sectores.find((s) => s.getAttribute('aria-pressed') === 'true');
+    const esElMismo = activoPrevio === sector;
+
+    sectores.forEach((s) => s.setAttribute('aria-pressed', 'false'));
+
+    if (esElMismo) {
+      if (panel) {
+        panel.innerHTML = '<p class="predio-mapa__panel-vacio">Elegí un sector del mapa para ver qué empresas exponen ahí.</p>';
+      }
+      return;
+    }
+
+    sector.setAttribute('aria-pressed', 'true');
+    const rubroId = sector.dataset.sector ?? '';
+    const nombreSector = sector.getAttribute('aria-label') ?? '';
+    const expositoresDelSector = datosExpositoresPorRubro[rubroId] ?? [];
+
+    if (panel) {
+      const lista = expositoresDelSector
+        .map((e) => `<li><a href="${withBase(`/expositores/${e.id}`)}">${e.nombre}</a></li>`)
+        .join('');
+      panel.innerHTML = `
+        <p class="predio-mapa__panel-titulo">${nombreSector.split(':')[0]}</p>
+        <p class="predio-mapa__panel-cantidad">${expositoresDelSector.length} expositores en este sector</p>
+        <ul class="predio-mapa__panel-lista">${lista}</ul>
+      `;
+    }
+  }
+
+  sectores.forEach((sector) => {
+    sector.addEventListener('click', () => mostrarSector(sector));
+    sector.addEventListener('keydown', (evento) => {
+      if (evento.key === 'Enter' || evento.key === ' ') {
+        evento.preventDefault();
+        mostrarSector(sector);
+      }
+    });
+  });
+</script>
