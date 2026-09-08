@@ -1,0 +1,86 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import NoticiaGrafico from '@/components/NoticiaGrafico.astro';
+import { withBase } from '@/utils/url';
+import { formateadorFechaLarga } from '@/utils/fecha';
+
+export async function getStaticPaths() {
+  const noticias = await getCollection('noticias');
+  return noticias.map((noticia, indice) => ({
+    params: { id: noticia.id },
+    props: { noticia, indice },
+  }));
+}
+
+const { noticia, indice } = Astro.props;
+const { Content } = await render(noticia);
+---
+
+<BaseLayout title={noticia.data.titulo} description={noticia.data.bajada}>
+  <article class="contenedor noticia-detalle">
+    <nav class="noticia-detalle__migas" aria-label="Ruta de navegación">
+      <a href={withBase('/noticias')}>Noticias</a> / <span>{noticia.data.titulo}</span>
+    </nav>
+
+    <p class="noticia-detalle__fecha">{formateadorFechaLarga.format(noticia.data.fecha)}</p>
+    <h1>{noticia.data.titulo}</h1>
+    <p class="noticia-detalle__bajada">{noticia.data.bajada}</p>
+
+    <NoticiaGrafico semilla={indice} class="noticia-detalle__grafico" />
+
+    <div class="noticia-detalle__cuerpo">
+      <Content />
+    </div>
+
+    <a class="boton boton--secundario" href={withBase('/noticias')}>Volver a Noticias</a>
+  </article>
+</BaseLayout>
+
+<style>
+  .noticia-detalle {
+    padding-block: var(--space-7) var(--space-9);
+    max-width: var(--ancho-maximo-angosto);
+  }
+
+  .noticia-detalle__migas {
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    margin-bottom: var(--space-5);
+  }
+
+  .noticia-detalle__fecha {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+    margin-bottom: var(--space-2);
+  }
+
+  .noticia-detalle__bajada {
+    color: var(--color-texto);
+    font-size: var(--texto-md);
+    margin-top: var(--space-3);
+  }
+
+  .noticia-detalle__grafico {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-block: var(--space-6);
+  }
+
+  .noticia-detalle__cuerpo {
+    color: var(--color-texto);
+    line-height: var(--interlineado-texto);
+  }
+
+  .noticia-detalle__cuerpo :global(p) {
+    margin-bottom: var(--space-4);
+  }
+
+  .noticia-detalle__cuerpo :global(em) {
+    color: var(--color-titulo);
+  }
+
+  .noticia-detalle .boton {
+    margin-top: var(--space-6);
+  }
+</style>

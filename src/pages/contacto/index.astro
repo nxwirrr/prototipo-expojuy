@@ -1,0 +1,225 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import FaqLista from '@/components/FaqLista.astro';
+
+const faq = (await getCollection('faq')).map((f) => f.data);
+---
+
+<BaseLayout
+  title="Contacto"
+  description="Contacto de ExpoJuy 2026 y preguntas frecuentes sobre la feria."
+>
+  <section class="contenedor contacto-cabecera">
+    <h1>Contacto</h1>
+    <p>
+      Escribinos por cualquier consulta: cómo exponer, acreditación de prensa, rondas de negocios o
+      información general de la feria.
+    </p>
+  </section>
+
+  <section class="contenedor contacto-cuerpo">
+    <div class="contacto-info">
+      <h2>Datos de contacto</h2>
+      <dl>
+        <div>
+          <dt>Email</dt>
+          <dd><a href="mailto:info@expojuy.example.com">info@expojuy.example.com</a></dd>
+        </div>
+        <div>
+          <dt>Teléfono</dt>
+          <dd>+54 388 000-0000</dd>
+        </div>
+        <div>
+          <dt>Sede</dt>
+          <dd>Ciudad Cultural, San Salvador de Jujuy</dd>
+        </div>
+      </dl>
+      <p class="contacto-info__nota">
+        Datos de contacto de muestra para este prototipo — se reemplazan por los canales oficiales en
+        el sitio definitivo.
+      </p>
+    </div>
+
+    <form class="contacto-form" data-form-contacto novalidate>
+      <h2>Formulario de contacto</h2>
+      <p class="contacto-form__nota">
+        Este formulario es una demostración: no envía datos a ningún servidor. Mientras tanto,
+        escribinos por correo a <a href="mailto:info@expojuy.example.com">info@expojuy.example.com</a>.
+      </p>
+
+      <div class="contacto-form__campo">
+        <label for="contacto-nombre">Nombre y apellido</label>
+        <input type="text" id="contacto-nombre" name="nombre" required autocomplete="name" />
+      </div>
+
+      <div class="contacto-form__campo">
+        <label for="contacto-email">Correo electrónico</label>
+        <input type="email" id="contacto-email" name="email" required autocomplete="email" />
+      </div>
+
+      <div class="contacto-form__campo">
+        <label for="contacto-motivo">Motivo de la consulta</label>
+        <select id="contacto-motivo" name="motivo" required>
+          <option value="">Elegí una opción</option>
+          <option value="visitante">Soy visitante</option>
+          <option value="expositor">Quiero exponer</option>
+          <option value="empresa">Rondas de negocios / empresa</option>
+          <option value="prensa">Soy prensa</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="contacto-form__campo">
+        <label for="contacto-mensaje">Mensaje</label>
+        <textarea id="contacto-mensaje" name="mensaje" rows="5" required></textarea>
+      </div>
+
+      <p class="contacto-form__resultado" role="status" aria-live="polite" data-resultado-form></p>
+
+      <button type="submit" class="boton boton--primario">Enviar consulta</button>
+    </form>
+  </section>
+
+  <section class="contenedor contacto-faq" id="faq" aria-labelledby="titulo-faq">
+    <h2 id="titulo-faq">Preguntas frecuentes</h2>
+    <FaqLista items={faq} />
+  </section>
+</BaseLayout>
+
+<style>
+  .contacto-cabecera {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .contacto-cabecera p {
+    color: var(--color-texto);
+    max-width: 65ch;
+    margin-top: var(--space-3);
+  }
+
+  .contacto-cuerpo {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: var(--space-8);
+    padding-block: var(--space-6) var(--space-9);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .contacto-info h2,
+  .contacto-form h2 {
+    margin-bottom: var(--space-4);
+  }
+
+  .contacto-info dl div {
+    padding-block: var(--space-3);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .contacto-info dt {
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-semibold);
+    color: var(--color-texto);
+  }
+
+  .contacto-info dd {
+    margin: 0;
+    color: var(--color-titulo);
+    font-weight: var(--peso-semibold);
+  }
+
+  .contacto-info__nota {
+    margin-top: var(--space-5);
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    font-style: italic;
+  }
+
+  .contacto-form__nota {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+    margin-bottom: var(--space-5);
+    max-width: 55ch;
+  }
+
+  .contacto-form__campo {
+    margin-bottom: var(--space-4);
+  }
+
+  .contacto-form__campo label {
+    display: block;
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+    margin-bottom: var(--space-2);
+  }
+
+  .contacto-form__campo input,
+  .contacto-form__campo select,
+  .contacto-form__campo textarea {
+    width: 100%;
+    min-height: var(--area-tactil-min);
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid var(--color-borde-ui);
+    border-radius: var(--radio-control);
+    background: var(--color-fondo);
+    color: var(--color-texto);
+    font: inherit;
+  }
+
+  .contacto-form__campo textarea {
+    min-height: 8rem;
+    resize: vertical;
+  }
+
+  .contacto-form__campo input:focus-visible,
+  .contacto-form__campo select:focus-visible,
+  .contacto-form__campo textarea:focus-visible {
+    border-color: var(--color-foco);
+  }
+
+  .contacto-form__campo input:invalid:not(:placeholder-shown) {
+    border-color: var(--color-purpura);
+  }
+
+  .contacto-form__resultado {
+    color: var(--color-purpura);
+    font-weight: var(--peso-semibold);
+    min-height: 1.5em;
+  }
+
+  .contacto-faq {
+    padding-block: var(--space-7) var(--space-9);
+    border-top: 1px solid var(--color-borde-ui);
+    scroll-margin-top: var(--space-6);
+  }
+
+  .contacto-faq h2 {
+    margin-bottom: var(--space-6);
+  }
+
+  @media (max-width: 1023px) {
+    .contacto-cuerpo {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const formulario = document.querySelector<HTMLFormElement>('[data-form-contacto]');
+  const resultado = document.querySelector<HTMLElement>('[data-resultado-form]');
+
+  formulario?.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+
+    if (!formulario.checkValidity()) {
+      formulario.reportValidity();
+      return;
+    }
+
+    if (resultado) {
+      resultado.textContent =
+        '¡Gracias! Este es un prototipo sin envío real — en el sitio definitivo, tu consulta llegaría al equipo organizador.';
+    }
+    formulario.reset();
+  });
+</script>

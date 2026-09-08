@@ -1,0 +1,64 @@
+---
+interface Props {
+  items: { pregunta: string; respuesta: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="faq-lista">
+  {items.map((item) => (
+    <details class="faq-lista__item">
+      <summary class="faq-lista__pregunta">{item.pregunta}</summary>
+      <p class="faq-lista__respuesta">{item.respuesta}</p>
+    </details>
+  ))}
+</div>
+
+<style>
+  .faq-lista {
+    max-width: var(--ancho-maximo-angosto);
+  }
+
+  .faq-lista__item {
+    border-top: 1px solid var(--color-borde-ui);
+    padding-block: var(--space-4);
+  }
+
+  .faq-lista__item:last-child {
+    border-bottom: 1px solid var(--color-borde-ui);
+  }
+
+  .faq-lista__pregunta {
+    cursor: pointer;
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .faq-lista__pregunta::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-lista__pregunta::after {
+    content: '+';
+    font-size: var(--texto-lg);
+    font-weight: var(--peso-regular);
+    color: var(--color-purpura);
+    flex-shrink: 0;
+  }
+
+  .faq-lista__item[open] .faq-lista__pregunta::after {
+    content: '−';
+  }
+
+  .faq-lista__respuesta {
+    margin-top: var(--space-3);
+    color: var(--color-texto);
+    max-width: 65ch;
+  }
+</style>

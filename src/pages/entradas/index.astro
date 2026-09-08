@@ -1,0 +1,118 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/utils/url';
+
+const tiposDeAcceso = [
+  {
+    nombre: 'Visitante general',
+    precio: 'Gratuito',
+    descripcion:
+      'Acceso al piso de exposición, charlas, paneles y talleres abiertos, los cuatro días de la feria. Requiere inscripción previa online.',
+  },
+  {
+    nombre: 'Rondas de negocios',
+    precio: 'Con acreditación',
+    descripcion:
+      'Para empresas compradoras, importadoras o inversoras interesadas en participar de los encuentros pautados por rubro. La acreditación se coordina por contacto directo con la organización.',
+  },
+  {
+    nombre: 'Prensa',
+    precio: 'Con acreditación',
+    descripcion:
+      'Acceso a gacetillas, kit de prensa y cobertura de las actividades centrales. Ver la sección Prensa para acreditarte.',
+  },
+];
+---
+
+<BaseLayout
+  title="Entradas"
+  description="Cómo acceder a ExpoJuy 2026: visitante general, rondas de negocios y acreditación de prensa."
+>
+  <section class="contenedor entradas-cabecera">
+    <h1>Entradas</h1>
+    <p>
+      ExpoJuy 2026 tiene acceso general gratuito. Este prototipo no incluye pasarela de pago ni venta
+      real de entradas: la inscripción se resuelve por contacto directo con la organización.
+    </p>
+  </section>
+
+  <section class="contenedor entradas-tipos">
+    {tiposDeAcceso.map((tipo) => (
+      <article class="entradas-tipos__item">
+        <p class="entradas-tipos__precio">{tipo.precio}</p>
+        <h2>{tipo.nombre}</h2>
+        <p class="entradas-tipos__descripcion">{tipo.descripcion}</p>
+      </article>
+    ))}
+  </section>
+
+  <section class="contenedor entradas-cta">
+    <h2>¿Cómo me inscribo?</h2>
+    <p>
+      Completá el formulario de contacto indicando qué tipo de acceso necesitás. Te vamos a confirmar
+      la inscripción por correo electrónico antes del evento.
+    </p>
+    <a class="boton boton--primario" href={withBase('/contacto')}>Ir al formulario de contacto</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .entradas-cabecera {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .entradas-cabecera p {
+    color: var(--color-texto);
+    max-width: 65ch;
+    margin-top: var(--space-3);
+  }
+
+  .entradas-tipos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .entradas-tipos__item {
+    padding: var(--space-5);
+    background: var(--color-fondo-alterno);
+    border-left: 4px solid var(--color-violeta);
+  }
+
+  .entradas-tipos__precio {
+    display: inline-block;
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-bold);
+    color: var(--color-enlace);
+    margin-bottom: var(--space-2);
+  }
+
+  .entradas-tipos__item h2 {
+    font-size: var(--texto-md);
+    margin-bottom: var(--space-2);
+  }
+
+  .entradas-tipos__descripcion {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+  }
+
+  .entradas-cta {
+    padding-block: var(--space-7) var(--space-9);
+    border-top: 1px solid var(--color-borde-ui);
+    max-width: 60ch;
+  }
+
+  .entradas-cta p {
+    color: var(--color-texto);
+    margin-block: var(--space-3) var(--space-5);
+  }
+
+  @media (max-width: 767px) {
+    .entradas-tipos {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

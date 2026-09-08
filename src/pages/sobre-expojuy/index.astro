@@ -1,0 +1,154 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import RubroIcon from '@/components/icons/RubroIcon.astro';
+import { withBase } from '@/utils/url';
+import { ORDEN_RUBROS_POR_SECTOR } from '@/utils/rubros';
+
+const rubrosCollection = await getCollection('rubros');
+const rubroPorId = new Map(rubrosCollection.map((r) => [r.data.id, r.data]));
+const rubrosOrdenados = ORDEN_RUBROS_POR_SECTOR.map((id) => rubroPorId.get(id)).filter((r) => r !== undefined);
+---
+
+<BaseLayout
+  title="ExpoJuy 2026"
+  description="Qué es ExpoJuy 2026, cuándo y dónde se realiza, y quiénes la organizan: la feria de comercio exterior de Jujuy."
+>
+  <section class="contenedor sobre-cabecera">
+    <h1>ExpoJuy 2026</h1>
+    <p class="sobre-cabecera__bajada">Conectando países, creando oportunidades.</p>
+  </section>
+
+  <section class="contenedor sobre-seccion">
+    <h2>Qué es ExpoJuy</h2>
+    <p>
+      ExpoJuy es la feria de comercio exterior de la provincia de Jujuy: un punto de encuentro entre
+      empresas regionales del norte argentino y compradores, inversores y delegaciones de otros países.
+      A diferencia de una feria de público general, su eje es el negocio internacional — rondas de
+      negocios, misiones comerciales y espacios de vinculación entre oferta local y demanda externa.
+    </p>
+    <p>
+      La edición 2026 organiza a las empresas expositoras en ocho rubros —minería y litio,
+      agroindustria y alimentos, energías renovables, tecnología y software, turismo, textil y cueros,
+      logística y transporte, y servicios financieros—, cada uno con su propio sector dentro del predio.
+    </p>
+  </section>
+
+  <section class="contenedor sobre-seccion">
+    <h2>Fecha y sede</h2>
+    <p>
+      Del <strong>9 al 12 de octubre de 2026</strong>, en la <strong>Ciudad Cultural</strong>,
+      San Salvador de Jujuy.
+    </p>
+    <a class="boton boton--secundario" href={withBase('/contacto')}>Cómo llegar</a>
+  </section>
+
+  <section class="contenedor sobre-seccion">
+    <h2>Rubros de esta edición</h2>
+    <ul class="sobre-rubros">
+      {rubrosOrdenados.map((rubro) => (
+        <li class="sobre-rubros__item">
+          <RubroIcon icono={rubro.icono} class="sobre-rubros__icono" />
+          <span>{rubro.nombre}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="contenedor sobre-seccion">
+    <h2>Organizan y acompañan</h2>
+    <p>
+      ExpoJuy es organizada por la <strong>Cámara de Comercio Exterior de Jujuy</strong> (CamComex) y el
+      <strong>Ministerio de Desarrollo Económico y Producción de la Provincia de Jujuy</strong>, con el
+      acompañamiento de <strong>ClusteAR – Cámara de Empresas TICs</strong>.
+    </p>
+  </section>
+
+  <section class="contenedor sobre-cta">
+    <a class="boton boton--primario" href={withBase('/agenda')}>Ver agenda</a>
+    <a class="boton boton--secundario" href={withBase('/expositores')}>Ver expositores</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .sobre-cabecera {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .sobre-cabecera__bajada {
+    color: var(--color-texto);
+    font-size: var(--texto-lg);
+    margin-top: var(--space-3);
+  }
+
+  .sobre-seccion {
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .sobre-seccion h2 {
+    margin-bottom: var(--space-4);
+  }
+
+  .sobre-seccion p {
+    color: var(--color-texto);
+    max-width: 70ch;
+  }
+
+  .sobre-seccion p + p {
+    margin-top: var(--space-4);
+  }
+
+  .sobre-seccion .boton {
+    margin-top: var(--space-4);
+  }
+
+  .sobre-rubros {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+  }
+
+  .sobre-rubros__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--color-fondo-alterno);
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+    font-size: var(--texto-sm);
+  }
+
+  .sobre-rubros__icono {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--color-purpura);
+    flex-shrink: 0;
+  }
+
+  .sobre-cta {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    padding-block: var(--space-7) var(--space-9);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  @media (max-width: 767px) {
+    .sobre-rubros {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .sobre-rubros {
+      grid-template-columns: 1fr;
+    }
+
+    .sobre-cta {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

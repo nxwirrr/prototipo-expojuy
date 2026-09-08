@@ -1,0 +1,151 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatearDia } from '@/utils/fecha';
+
+const agenda = await getCollection('agenda');
+
+const etiquetaTipo: Record<string, string> = {
+  apertura: 'Apertura',
+  panel: 'Panel',
+  charla: 'Charla',
+  taller: 'Taller',
+  'rueda-de-negocios': 'Rueda de negocios',
+  networking: 'Networking',
+  cierre: 'Cierre',
+};
+
+const porDia = new Map<string, typeof agenda>();
+for (const actividad of agenda) {
+  const clave = actividad.data.dia.toISOString().slice(0, 10);
+  if (!porDia.has(clave)) porDia.set(clave, []);
+  porDia.get(clave)!.push(actividad);
+}
+
+const dias = [...porDia.entries()]
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([clave, actividades]) => ({
+    clave,
+    fecha: actividades[0].data.dia,
+    actividades: actividades.sort((a, b) => a.data.horarioInicio.localeCompare(b.data.horarioInicio)),
+  }));
+---
+
+<BaseLayout
+  title="Agenda"
+  description="Agenda completa de ExpoJuy 2026: charlas, paneles, talleres y rondas de negocios, día por día."
+>
+  <section class="contenedor agenda-cabecera">
+    <h1>Agenda</h1>
+    <p>{agenda.length} actividades a lo largo de la feria, entre charlas, paneles, talleres y rondas de negocios.</p>
+  </section>
+
+  {dias.map((dia) => (
+    <section class="contenedor agenda-dia" aria-labelledby={`dia-${dia.clave}`}>
+      <h2 id={`dia-${dia.clave}`}>{formatearDia(dia.fecha)}</h2>
+      <ol class="agenda-dia__lista">
+        {dia.actividades.map((actividad) => (
+          <li class="agenda-dia__item">
+            <div class="agenda-dia__hora">
+              <span>{actividad.data.horarioInicio}</span>
+              <span class="agenda-dia__hora-fin">{actividad.data.horarioFin}</span>
+            </div>
+            <div class="agenda-dia__detalle">
+              <span class="agenda-dia__tipo">{etiquetaTipo[actividad.data.tipo]}</span>
+              <p class="agenda-dia__titulo">{actividad.data.titulo}</p>
+              <p class="agenda-dia__meta">
+                {actividad.data.espacio}
+                {actividad.data.orador && <> · {actividad.data.orador}</>}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+</BaseLayout>
+
+<style>
+  .agenda-cabecera {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .agenda-cabecera p {
+    color: var(--color-texto);
+    margin-top: var(--space-3);
+  }
+
+  .agenda-dia {
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .agenda-dia:last-child {
+    padding-bottom: var(--space-9);
+  }
+
+  .agenda-dia h2 {
+    margin-bottom: var(--space-5);
+  }
+
+  .agenda-dia__lista {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .agenda-dia__item {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: var(--space-5);
+    padding-block: var(--space-4);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .agenda-dia__item:last-child {
+    border-bottom: 1px solid var(--color-borde-ui);
+  }
+
+  .agenda-dia__hora {
+    display: flex;
+    flex-direction: column;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-titulo);
+    font-weight: var(--peso-semibold);
+  }
+
+  .agenda-dia__hora-fin {
+    color: var(--color-texto);
+    font-weight: var(--peso-regular);
+    font-size: var(--texto-sm);
+  }
+
+  .agenda-dia__hora-fin::before {
+    content: 'a ';
+  }
+
+  .agenda-dia__tipo {
+    display: inline-block;
+    font-size: var(--texto-sm);
+    font-weight: var(--peso-semibold);
+    color: var(--color-enlace);
+    margin-bottom: var(--space-1);
+  }
+
+  .agenda-dia__titulo {
+    font-weight: var(--peso-semibold);
+    color: var(--color-titulo);
+  }
+
+  .agenda-dia__meta {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+    margin-top: var(--space-1);
+  }
+
+  @media (max-width: 479px) {
+    .agenda-dia__item {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+  }
+</style>

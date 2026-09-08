@@ -1,0 +1,101 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import NoticiaGrafico from '@/components/NoticiaGrafico.astro';
+import { withBase } from '@/utils/url';
+import { formateadorFechaLarga } from '@/utils/fecha';
+
+const noticias = (await getCollection('noticias')).sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+---
+
+<BaseLayout
+  title="Noticias"
+  description="Novedades y comunicados oficiales de ExpoJuy 2026."
+>
+  <section class="contenedor noticias-cabecera">
+    <h1>Noticias</h1>
+    <p>Novedades y comunicados sobre la organización de ExpoJuy 2026.</p>
+  </section>
+
+  <section class="contenedor noticias-lista">
+    {noticias.map((noticia, indice) => (
+      <a class="noticias-lista__item" href={withBase(`/noticias/${noticia.id}`)}>
+        <NoticiaGrafico semilla={indice} class="noticias-lista__grafico" />
+        <div>
+          <p class="noticias-lista__fecha">{formateadorFechaLarga.format(noticia.data.fecha)}</p>
+          <p class="noticias-lista__titulo">{noticia.data.titulo}</p>
+          <p class="noticias-lista__bajada">{noticia.data.bajada}</p>
+        </div>
+      </a>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .noticias-cabecera {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .noticias-cabecera p {
+    color: var(--color-texto);
+    margin-top: var(--space-3);
+  }
+
+  .noticias-lista {
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--space-6) var(--space-9);
+  }
+
+  .noticias-lista__item {
+    display: grid;
+    grid-template-columns: 12rem 1fr;
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-borde-ui);
+    text-decoration: none;
+    align-items: center;
+  }
+
+  .noticias-lista__item:last-child {
+    border-bottom: 1px solid var(--color-borde-ui);
+  }
+
+  .noticias-lista__grafico {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+  }
+
+  .noticias-lista__fecha {
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    margin-bottom: var(--space-1);
+  }
+
+  .noticias-lista__titulo {
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+    margin-bottom: var(--space-2);
+  }
+
+  .noticias-lista__bajada {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+  }
+
+  @media (max-width: 767px) {
+    .noticias-lista__item {
+      grid-template-columns: 8rem 1fr;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .noticias-lista__item {
+      grid-template-columns: 1fr;
+    }
+
+    .noticias-lista__grafico {
+      max-width: 10rem;
+    }
+  }
+</style>

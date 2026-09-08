@@ -300,6 +300,43 @@ para verificar — hay que probar navegando por los enlaces reales del sitio
   letra + nombre + conteo, y evita el trabajo (y el riesgo de bugs de
   tamaño) de anidar `<svg>` dentro de otro `<svg>`.
 
+## Páginas de nivel 2 (Bloque 6)
+
+- **`/agenda`** agrupa las 12 actividades por día (encabezado por jornada,
+  formateado con `formatearDia` de `utils/fecha.ts` — mismo helper con
+  `timeZone: 'UTC'` del Bloque 3, para no reintroducir el corrimiento de
+  fecha). Se encontró y sacó una regla `text-transform: capitalize` que
+  pisaba ese formateo y ponía en mayúscula cada palabra ("9 De Octubre" en
+  vez de "9 de octubre").
+- **`/noticias` y `/noticias/[id]`**: la ficha usa `render()` de
+  `astro:content` para mostrar el cuerpo Markdown de cada noticia (el
+  `<Content />` de la colección), con el mismo gráfico generado
+  (`NoticiaGrafico`) que ya se usaba en la home, ahora reutilizado también
+  en el listado completo.
+- **`/entradas`**: página informativa, no un checkout. Aclara desde el
+  primer párrafo que este prototipo no tiene pasarela de pago y que la
+  inscripción se resuelve por contacto directo — evita simular un flujo de
+  compra que no existe.
+- **`/contacto`**: el formulario es real en su HTML (inputs con `<label>`
+  asociado, `required`, `type="email"`, validación nativa con
+  `reportValidity()` que anuncia errores) pero no envía datos a ningún
+  lado — se lo dice explícitamente arriba del formulario y al enviarlo
+  muestra un mensaje de confirmación aclarando que es una demostración, en
+  vez de simular un envío exitoso que no ocurrió. El email de contacto usa
+  el dominio reservado `example.com` (RFC 2606) para que quede claro que es
+  un dato de muestra y no se pueda confundir con un dominio real. También
+  vive acá la sección de FAQ completa (las 8 preguntas, con ancla `#faq`
+  para los enlaces que ya apuntaban ahí desde el Bloque 3).
+- **`/sponsors`**: mismo criterio visual que la home (jerarquía de tamaño
+  por nivel), como página completa con las 10 empresas de muestra y un CTA
+  para sumarse como sponsor.
+- Se extrajo `FaqLista.astro` (antes el acordeón vivía sólo dentro de
+  `FaqAcordeon.astro`, exclusivo de la home) para reutilizar el mismo
+  acordeón accesible en la home (6 preguntas) y en `/contacto` (las 8).
+- Verificado con el mismo script de chequeo de enlaces del Bloque 4: cero
+  enlaces rotos entre las páginas ya construidas — sólo quedan las 4
+  landings de audiencia del Bloque 7, todavía no creadas.
+
 ## Pendiente / a confirmar antes de la entrega
 
 - `astro.config.mjs` tiene `site`/`base` con placeholders

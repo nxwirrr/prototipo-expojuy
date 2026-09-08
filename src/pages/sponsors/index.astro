@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PlacaIniciales from '@/components/PlacaIniciales.astro';
+import { withBase } from '@/utils/url';
+
+const sponsors = await getCollection('sponsors');
+
+const niveles = ['Platino', 'Oro', 'Plata', 'Bronce'] as const;
+const colorPorNivel: Record<(typeof niveles)[number], 'turquesa' | 'violeta' | 'purpura' | 'lila'> = {
+  Platino: 'purpura',
+  Oro: 'violeta',
+  Plata: 'lila',
+  Bronce: 'turquesa',
+};
+---
+
+<BaseLayout
+  title="Sponsors"
+  description="Empresas y organismos que acompañan ExpoJuy 2026."
+>
+  <section class="contenedor sponsors-cabecera">
+    <h1>Sponsors</h1>
+    <p>Empresas y organismos que acompañan esta edición de ExpoJuy.</p>
+  </section>
+
+  {niveles.map((nivel) => {
+    const deEsteNivel = sponsors.filter((s) => s.data.nivel === nivel);
+    if (deEsteNivel.length === 0) return null;
+    return (
+      <section class="contenedor sponsors-nivel">
+        <h2>{nivel}</h2>
+        <ul class={`sponsors-nivel__lista sponsors-nivel__lista--${nivel.toLowerCase()}`}>
+          {deEsteNivel.map((s) => (
+            <li>
+              <PlacaIniciales nombre={s.data.nombre} color={colorPorNivel[nivel]} />
+              <span class="sponsors-nivel__nombre">{s.data.nombre}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  })}
+
+  <section class="contenedor sponsors-cta">
+    <h2>Sumate como sponsor</h2>
+    <p>Escribinos para conocer los espacios de auspicio disponibles para la próxima edición.</p>
+    <a class="boton boton--primario" href={withBase('/contacto')}>Contactar a la organización</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .sponsors-cabecera {
+    padding-block: var(--space-8) var(--space-6);
+  }
+
+  .sponsors-cabecera p {
+    color: var(--color-texto);
+    margin-top: var(--space-3);
+  }
+
+  .sponsors-nivel {
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--color-borde-ui);
+  }
+
+  .sponsors-nivel h2 {
+    margin-bottom: var(--space-5);
+  }
+
+  .sponsors-nivel__lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+  }
+
+  .sponsors-nivel__lista li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    width: 8rem;
+  }
+
+  .sponsors-nivel__lista--oro li {
+    width: 7rem;
+  }
+
+  .sponsors-nivel__lista--plata li {
+    width: 6rem;
+  }
+
+  .sponsors-nivel__lista--bronce li {
+    width: 5.5rem;
+  }
+
+  .sponsors-nivel__nombre {
+    font-size: var(--texto-sm);
+    color: var(--color-texto);
+    text-align: center;
+  }
+
+  .sponsors-cta {
+    padding-block: var(--space-7) var(--space-9);
+    border-top: 1px solid var(--color-borde-ui);
+    max-width: 60ch;
+  }
+
+  .sponsors-cta p {
+    color: var(--color-texto);
+    margin-block: var(--space-3) var(--space-5);
+  }
+</style>
