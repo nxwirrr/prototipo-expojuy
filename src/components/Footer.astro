@@ -30,7 +30,13 @@ const redes = ['Instagram', 'Facebook', 'LinkedIn'];
 <footer class="footer superficie-oscura">
   <div class="contenedor footer__grillado">
     <div class="footer__marca">
-      <Image src={logoVertical} alt="ExpoJuy 2026 — Conectando países, creando oportunidades" width={140} height={97} />
+      <Image
+        src={logoVertical}
+        alt="ExpoJuy 2026 — Conectando países, creando oportunidades"
+        width={140}
+        height={97}
+        densities={[1, 2]}
+      />
       <p>
         Ciudad Cultural, San Salvador de Jujuy<br />
         9 al 12 de octubre de 2026
@@ -82,7 +88,14 @@ const redes = ['Instagram', 'Facebook', 'LinkedIn'];
         <br />
         <strong>Acompaña:</strong> ClusteAR – Cámara de Empresas TICs
       </p>
-      <Image src={logoCamcomex} alt="Cámara de Comercio Exterior de Jujuy (CamComex)" width={64} height={60} class="footer__logo-camcomex" />
+      <Image
+        src={logoCamcomex}
+        alt="Cámara de Comercio Exterior de Jujuy (CamComex)"
+        width={64}
+        height={60}
+        densities={[1, 2]}
+        class="footer__logo-camcomex"
+      />
     </div>
   </div>
 
@@ -121,10 +134,12 @@ const redes = ['Instagram', 'Facebook', 'LinkedIn'];
   .footer__columna ul {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
   }
 
   .footer__columna a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--area-tactil-min);
     text-decoration: none;
   }
 

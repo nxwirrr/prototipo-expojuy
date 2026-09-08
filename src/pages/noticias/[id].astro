@@ -44,9 +44,17 @@ const { Content } = await render(noticia);
   }
 
   .noticia-detalle__migas {
+    display: flex;
+    align-items: center;
     font-size: var(--texto-sm);
     color: var(--color-texto);
     margin-bottom: var(--space-5);
+  }
+
+  .noticia-detalle__migas a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--area-tactil-min);
   }
 
   .noticia-detalle__fecha {

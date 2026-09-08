@@ -360,6 +360,56 @@ para verificar — hay que probar navegando por los enlaces reales del sitio
   script de chequeo de enlaces (usado también en los Bloques 4 y 6) corrió
   sobre las 41 páginas generadas y confirmó 0 enlaces internos rotos.
 
+## Repaso de accesibilidad y responsive (Bloque 8)
+
+Pasada transversal sobre las 41 páginas ya construidas, no página por página
+sino con auditorías automatizadas (un script contra el HTML compilado) más
+verificación manual en el navegador. Se encontraron y corrigieron bugs
+reales, no sólo se confirmó lo que ya estaba bien:
+
+- **Scroll horizontal en 320px de ancho.** El cajón del menú mobile
+  (`position: fixed` + `transform: translateX(100%)` cuando está cerrado)
+  sigue contando para el ancho de scroll del documento en Chromium aunque
+  esté visualmente oculto — es un problema conocido de ese patrón, no un
+  error de layout de otra sección. Se agregó `overflow-x: hidden` en
+  `<html>` (ver `base.css`) como red de seguridad estándar para este caso.
+  Se confirmó además que ninguna otra página tiene contenido real que se
+  corte por este cambio.
+- **Áreas táctiles menores a 44px.** Un barrido automatizado (excluyendo
+  enlaces dentro de texto corrido, exceptuados por la propia definición de
+  "objetivo de puntero" que boletines de accesibilidad usan como
+  referencia) encontró ocho lugares por debajo del mínimo: los enlaces de
+  la franja de audiencias (36px), el resumen del acordeón de sectores del
+  predio y de FAQ (32px), los enlaces del footer (22px), los enlaces "Ver
+  agenda completa" / "Ver todas" / "Ver todas las preguntas" de la home
+  (26px), las migas de pan de expositor y noticia (19px), los enlaces de
+  "otras empresas del rubro" (23px) y el email de contacto en la ficha de
+  datos (23px). Se corrigieron todos con `min-height: var(--area-tactil-min)`
+  + `display: inline-flex; align-items: center`, reutilizando el token que
+  ya existía en `tokens.css` desde el Bloque 1 pero que no se había
+  aplicado de manera consistente a estos elementos secundarios.
+- **`srcset` en imágenes.** El componente `<Image>` de Astro no genera
+  `srcset` a menos que se le pida explícitamente. Se agregó
+  `densities={[1, 2]}` a los tres logos (header, footer, CamComex) para
+  que sirvan una variante 2x en pantallas de alta densidad, que es la
+  técnica correcta para imágenes de tamaño fijo (a diferencia de un
+  `srcset` por ancho con `sizes`, pensado para imágenes que cambian de
+  tamaño según el layout).
+- **Prioridad de carga del logo del header.** Tenía `loading="lazy"` por
+  defecto (comportamiento estándar de `<Image>`), pero al estar en un
+  header sticky visible desde el primer pintado en todas las páginas, se
+  cambió a `loading="eager"` + `fetchpriority="high"` — lazy-load ahí sólo
+  perjudica el LCP sin ningún beneficio, porque nunca está realmente fuera
+  de la vista inicial.
+- **Verificado automáticamente y sin excepciones en las 41 páginas:**
+  `lang="es-AR"`, exactamente un `<h1>` por página, jerarquía de
+  encabezados sin saltos de nivel, todas las imágenes con `alt`, y el
+  enlace "saltar al contenido" presente.
+- `prefers-reduced-motion` sigue cubierto por una única regla global en
+  `base.css` (Bloque 1) que anula duración de animaciones/transiciones en
+  todo el documento — no hace falta tocarla por cada componente nuevo que
+  se agrega, así que no requirió cambios en este bloque.
+
 ## Pendiente / a confirmar antes de la entrega
 
 - `astro.config.mjs` tiene `site`/`base` con placeholders

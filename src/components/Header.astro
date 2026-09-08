@@ -46,7 +46,15 @@ function esActual(href: string): boolean {
 <header class="header">
   <div class="contenedor header__interior">
     <a href={withBase('/')} class="header__logo" aria-label="ExpoJuy 2026, ir al inicio">
-      <Image src={logoHorizontal} alt="ExpoJuy 2026 — Conectando países, creando oportunidades" width={220} height={95} />
+      <Image
+        src={logoHorizontal}
+        alt="ExpoJuy 2026 — Conectando países, creando oportunidades"
+        width={220}
+        height={95}
+        densities={[1, 2]}
+        loading="eager"
+        fetchpriority="high"
+      />
     </a>
 
     <button
@@ -88,7 +96,7 @@ function esActual(href: string): boolean {
     display: flex;
     align-items: center;
     gap: var(--space-4);
-    min-height: 36px;
+    min-height: var(--area-tactil-min);
     flex-wrap: wrap;
   }
 
@@ -106,7 +114,8 @@ function esActual(href: string): boolean {
   .franja-audiencias__lista a {
     display: inline-flex;
     align-items: center;
-    min-height: 36px;
+    min-height: var(--area-tactil-min);
+    padding-inline: var(--space-1);
     font-weight: var(--peso-semibold);
     text-decoration: none;
   }

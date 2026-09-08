@@ -23,10 +23,16 @@ const faq = (await getCollection('faq')).slice(0, 6).map((f) => f.data);
 
   .faq__encabezado {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
     margin-bottom: var(--space-6);
     flex-wrap: wrap;
+  }
+
+  .faq__encabezado a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--area-tactil-min);
   }
 </style>

@@ -128,6 +128,12 @@ const faq = (await getCollection('faq')).map((f) => f.data);
     font-weight: var(--peso-semibold);
   }
 
+  .contacto-info dd a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--area-tactil-min);
+  }
+
   .contacto-info__nota {
     margin-top: var(--space-5);
     font-size: var(--texto-sm);

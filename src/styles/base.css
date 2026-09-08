@@ -12,6 +12,15 @@
 html {
   -webkit-text-size-adjust: 100%;
   color-scheme: light;
+  /*
+    El cajón del menú mobile (Header.astro) es position:fixed con
+    transform: translateX(100%) para quedar oculto fuera de pantalla. Un
+    elemento así sigue contando para el ancho de scroll del documento en
+    Chromium/WebKit aunque no se vea, y generaba scroll horizontal en
+    pantallas angostas (320px). overflow-x:hidden en la raíz es la forma
+    estándar de neutralizarlo sin tocar el layout del resto del sitio.
+  */
+  overflow-x: hidden;
 }
 
 body {

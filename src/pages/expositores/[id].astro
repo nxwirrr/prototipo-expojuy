@@ -92,9 +92,17 @@ const otrosDelRubro = (await getCollection('expositores'))
   }
 
   .ficha-expositor__migas {
+    display: flex;
+    align-items: center;
     font-size: var(--texto-sm);
     color: var(--color-texto);
     margin-bottom: var(--space-6);
+  }
+
+  .ficha-expositor__migas a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--area-tactil-min);
   }
 
   .ficha-expositor__encabezado {
@@ -175,9 +183,14 @@ const otrosDelRubro = (await getCollection('expositores'))
   .ficha-expositor__relacionados ul {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
     border-top: 1px solid var(--color-borde-ui);
     padding-top: var(--space-3);
+  }
+
+  .ficha-expositor__relacionados a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--area-tactil-min);
   }
 
   @media (max-width: 767px) {

@@ -60,6 +60,7 @@ const sectores = ORDEN_RUBROS_POR_SECTOR.map((rubroId) => {
     display: flex;
     align-items: center;
     gap: var(--space-4);
+    min-height: var(--area-tactil-min);
     font-weight: var(--peso-semibold);
     color: var(--color-titulo);
   }
@@ -97,9 +98,16 @@ const sectores = ORDEN_RUBROS_POR_SECTOR.map((rubroId) => {
 
   .sectores-accordion__lista li {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
     max-width: 30rem;
+  }
+
+  .sectores-accordion__lista a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--area-tactil-min);
   }
 
   .sectores-accordion__pais {
