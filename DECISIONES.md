@@ -337,6 +337,29 @@ para verificar — hay que probar navegando por los enlaces reales del sitio
   enlaces rotos entre las páginas ya construidas — sólo quedan las 4
   landings de audiencia del Bloque 7, todavía no creadas.
 
+## Landings de audiencia (Bloque 7)
+
+- **Una sola plantilla, `src/pages/[slug].astro`**, alimentada por
+  `audiencias.json` (Bloque 2) vía `getStaticPaths()`: genera las 4 páginas
+  (`/visitantes`, `/expositores-info`, `/empresas`, `/prensa`) sin
+  duplicar layout. Es una ruta dinámica a nivel raíz, pero no choca con las
+  páginas estáticas del sitio (`/agenda`, `/contacto`, etc.) porque en
+  salida estática Astro sólo construye los parámetros que
+  `getStaticPaths()` enumera explícitamente — no actúa como comodín en
+  runtime.
+- **Mismo color por audiencia que ya se usaba en la home** (turquesa
+  visitantes, violeta expositores, púrpura empresas, lila prensa, ver
+  `AccesoAudiencias.astro` del Bloque 3): al entrar desde la tarjeta de la
+  home o desde la franja superior, el color de acento de la landing
+  coincide con el que el usuario ya vio, para no perder la referencia
+  visual.
+- Cada landing muestra sus 3 o 4 accesos como enlaces directos a páginas
+  que ya existen (agenda, expositores, predio, contacto, noticias) — nunca
+  a una ruta placeholder.
+- **Verificación final de todo el sitio:** con las 4 landings ya creadas, el
+  script de chequeo de enlaces (usado también en los Bloques 4 y 6) corrió
+  sobre las 41 páginas generadas y confirmó 0 enlaces internos rotos.
+
 ## Pendiente / a confirmar antes de la entrega
 
 - `astro.config.mjs` tiene `site`/`base` con placeholders

@@ -1,0 +1,122 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { withBase } from '@/utils/url';
+
+export async function getStaticPaths() {
+  const audiencias = await getCollection('audiencias');
+  return audiencias.map((audiencia) => ({
+    params: { slug: audiencia.data.slug },
+    props: { audiencia },
+  }));
+}
+
+const { audiencia } = Astro.props;
+const { titular, bajada, accesos, cta } = audiencia.data;
+
+const colorPorSlug: Record<string, 'turquesa' | 'violeta' | 'purpura' | 'lila'> = {
+  visitantes: 'turquesa',
+  'expositores-info': 'violeta',
+  empresas: 'purpura',
+  prensa: 'lila',
+};
+const color = colorPorSlug[audiencia.data.slug] ?? 'violeta';
+---
+
+<BaseLayout title={titular} description={bajada}>
+  <section class={`contenedor audiencia-hero audiencia-hero--${color}`}>
+    <h1>{titular}</h1>
+    <p class="audiencia-hero__bajada">{bajada}</p>
+    <a class="boton boton--primario" href={withBase(cta.href)}>{cta.texto}</a>
+  </section>
+
+  <section class="contenedor audiencia-accesos" aria-label="Accesos directos">
+    <ul class="audiencia-accesos__grilla">
+      {accesos.map((acceso) => (
+        <li>
+          <a class={`audiencia-accesos__tarjeta audiencia-accesos__tarjeta--${color}`} href={withBase(acceso.href)}>
+            <span class="audiencia-accesos__titulo">{acceso.titulo}</span>
+            <span class="audiencia-accesos__descripcion">{acceso.descripcion}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .audiencia-hero {
+    padding-block: var(--space-9) var(--space-7);
+    border-bottom: 6px solid var(--color-violeta);
+  }
+
+  .audiencia-hero--turquesa {
+    border-bottom-color: var(--color-turquesa);
+  }
+
+  .audiencia-hero--violeta {
+    border-bottom-color: var(--color-violeta);
+  }
+
+  .audiencia-hero--purpura {
+    border-bottom-color: var(--color-purpura);
+  }
+
+  .audiencia-hero--lila {
+    border-bottom-color: var(--color-lila);
+  }
+
+  .audiencia-hero h1 {
+    max-width: 24ch;
+  }
+
+  .audiencia-hero__bajada {
+    color: var(--color-texto);
+    font-size: var(--texto-lg);
+    max-width: 55ch;
+    margin-block: var(--space-4) var(--space-6);
+  }
+
+  .audiencia-accesos {
+    padding-block: var(--space-7) var(--space-9);
+  }
+
+  .audiencia-accesos__grilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .audiencia-accesos__tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    height: 100%;
+    padding: var(--space-5);
+    background: var(--color-fondo-alterno);
+    text-decoration: none;
+    border-left: 4px solid var(--color-violeta);
+  }
+
+  .audiencia-accesos__tarjeta--turquesa {
+    border-left-color: var(--color-turquesa);
+  }
+
+  .audiencia-accesos__tarjeta--purpura {
+    border-left-color: var(--color-purpura);
+  }
+
+  .audiencia-accesos__tarjeta--lila {
+    border-left-color: var(--color-lila);
+  }
+
+  .audiencia-accesos__titulo {
+    font-weight: var(--peso-bold);
+    color: var(--color-titulo);
+  }
+
+  .audiencia-accesos__descripcion {
+    color: var(--color-texto);
+    font-size: var(--texto-sm);
+  }
+</style>
