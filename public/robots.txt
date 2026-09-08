@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://REEMPLAZAR-USUARIO.github.io/REEMPLAZAR-REPO/sitemap-index.xml
+Sitemap: https://micaelalopez-dev.github.io/prototipo-expojuy/sitemap-index.xml

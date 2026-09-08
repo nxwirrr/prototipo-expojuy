@@ -46,20 +46,17 @@ npm run preview
 
 ## Despliegue en GitHub Pages
 
-1. En `astro.config.mjs`, reemplazar los placeholders por los valores reales:
+El sitio se publica en **https://micaelalopez-dev.github.io/prototipo-expojuy/**
+mediante GitHub Actions.
 
-   ```js
-   site: 'https://tu-usuario.github.io',
-   base: '/tu-repo',
-   ```
-
-2. En `public/robots.txt`, actualizar la URL del `Sitemap` con el mismo
-   usuario/repo.
-3. Configurar un workflow de GitHub Actions (`.github/workflows/deploy.yml`)
-   que corra `npm ci && npm run build` y publique `dist/` con
-   `actions/deploy-pages`, o habilitar el build automático de Pages con
-   Astro desde la configuración del repositorio.
-4. En GitHub, **Settings → Pages → Source: GitHub Actions**.
+1. El workflow [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)
+   corre `npm ci && npm run build` en cada push a `main` y publica `dist/`
+   con `actions/deploy-pages`.
+2. En GitHub, activar **Settings → Pages → Source: GitHub Actions** una
+   única vez (si no está ya activado).
+3. Cualquier push a `main` dispara un nuevo deploy automáticamente; también
+   se puede disparar a mano desde la pestaña **Actions → Deploy a GitHub
+   Pages → Run workflow**.
 
 ## Estructura del proyecto
 
