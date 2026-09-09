@@ -16,18 +16,28 @@ import { withBase } from '@/utils/url';
 
     <svg
       class="hero__grafico"
-      viewBox="0 0 1080 1080"
+      viewBox="0 0 320 320"
       aria-hidden="true"
       role="presentation"
     >
-      <rect fill="#756aaf" x="688.4" y="39" width="210.6" height="524.2" />
-      <path
-        fill="#bba4ce"
-        fill-rule="evenodd"
-        d="M534.4,1041c-112.1,0-199-30.9-260.8-92.6-61.7-61.7-92.6-143.9-92.6-246.6s.6-26.5,1.7-40.4h211.4c-.7,9.8-1.1,19.5-1.1,29.1,0,50.9,12,90.7,36,119.4,24,28.7,59.6,43.1,106.7,43.1,97.1,0,147.8-63.9,152.3-191.6h210.9v29.1c0,111.2-32,197.4-96.1,258.6-64.1,61.2-153.6,91.9-268.5,91.9"
-      />
-      <rect fill="#74459a" x="182.7" y="352.6" width="353" height="210.6" />
-      <rect fill="#00bdd1" x="182.7" y="39" width="353" height="210.6" />
+      <defs>
+        <clipPath id="hero-curva">
+          <path d="M24 176 a112 112 0 0 0 224 0 Z" />
+        </clipPath>
+      </defs>
+
+      <rect x="24" y="24" width="88" height="56" fill="var(--color-turquesa)" />
+      <rect x="128" y="24" width="56" height="88" fill="var(--color-purpura)" />
+      <rect x="24" y="96" width="56" height="56" fill="var(--color-violeta)" />
+
+      <g clip-path="url(#hero-curva)">
+        <rect x="24" y="176" width="224" height="112" fill="#c9a46a" />
+        <path d="M24 288 L24 232 L70 198 L110 220 L150 184 L188 214 L248 176 L248 288 Z" fill="#8b4a2b" />
+        <path d="M24 288 L24 250 L62 214 L98 236 L136 206 L176 228 L210 196 L248 220 L248 288 Z" fill="#c46b4a" />
+        <path d="M24 288 L24 262 L78 236 L118 252 L158 228 L198 248 L248 230 L248 288 Z" fill="#d9a06a" />
+        <path d="M24 288 L54 268 L96 278 L140 258 L186 274 L248 256 L248 288 Z" fill="#6b8f4e" />
+        <rect x="24" y="176" width="224" height="36" fill="var(--color-lila)" />
+      </g>
     </svg>
   </div>
 </section>

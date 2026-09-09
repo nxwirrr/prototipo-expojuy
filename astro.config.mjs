@@ -7,7 +7,7 @@ import sitemap from '@astrojs/sitemap';
 const esDev = process.argv.includes('dev');
 
 export default defineConfig({
-  site: 'https://micaelalopez-dev.github.io',
+  site: 'https://nxwirrr.github.io',
   base: esDev ? '/' : '/prototipo-expojuy',
   trailingSlash: 'always',
   compressHTML: true,
