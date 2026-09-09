@@ -100,8 +100,9 @@ memoria descriptiva final.
 - Se evitan deliberadamente: tarjetas idénticas con sombra suave genérica,
   degradados decorativos, animaciones de entrada por sección, texto en
   mayúsculas sostenidas como etiqueta, y flechas "→" pegadas a botones.
-- El favicon (`public/favicon.svg`) es una recreación propia, en SVG, del
-  isologo (bloques + semicírculo), para no depender de un ícono externo.
+- El favicon (`public/favicon.svg`) usa el isologo real (los mismos cuatro
+  bloques del hero, con sus colores oficiales exactos). Antes era una
+  recreación propia mientras no había un archivo real.
 
 ## Accesibilidad y progressive enhancement
 
