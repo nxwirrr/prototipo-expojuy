@@ -30,7 +30,10 @@ function contarPorRubro(rubroId: string) {
 
   <div class="buscador-teaser__grilla">
     {rubros.map((rubro) => (
-      <a class="buscador-teaser__rubro" href={`${withBase('/expositores')}?rubro=${rubro.data.id}`}>
+      <a
+        class={`buscador-teaser__rubro buscador-teaser__rubro--${rubro.data.color}`}
+        href={`${withBase('/expositores')}?rubro=${rubro.data.id}`}
+      >
         <RubroIcon icono={rubro.data.icono} class="buscador-teaser__icono" />
         <span class="buscador-teaser__nombre">{rubro.data.nombre}</span>
         <span class="buscador-teaser__conteo">{contarPorRubro(rubro.data.id)} expositores</span>
@@ -84,35 +87,58 @@ function contarPorRubro(rubroId: string) {
   .buscador-teaser__rubro {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    justify-content: flex-end;
     gap: var(--space-2);
-    padding: var(--space-5) var(--space-3);
-    background: var(--color-fondo-alterno);
+    min-height: 10rem;
+    padding: var(--space-5) var(--space-4);
     text-decoration: none;
-    border: 2px solid transparent;
+    border: 3px solid transparent;
   }
 
-  .buscador-teaser__rubro:hover {
-    border-color: var(--color-purpura);
+  .buscador-teaser__rubro:hover,
+  .buscador-teaser__rubro:focus-visible {
+    border-color: var(--color-oscuro);
+  }
+
+  .buscador-teaser__rubro--turquesa {
+    background: var(--color-turquesa);
+    color: var(--color-oscuro);
+  }
+
+  .buscador-teaser__rubro--lila {
+    background: var(--color-lila);
+    color: var(--color-oscuro);
+  }
+
+  .buscador-teaser__rubro--violeta {
+    background: var(--color-violeta);
+    color: var(--color-blanco);
+  }
+
+  .buscador-teaser__rubro--purpura {
+    background: var(--color-purpura);
+    color: var(--color-blanco);
   }
 
   /* :global(): RubroIcon renderiza su propio <svg> raíz, ver DECISIONES.md */
   :global(.buscador-teaser__icono) {
-    width: 2.5rem;
-    height: 2.5rem;
-    color: var(--color-purpura);
+    width: 2rem;
+    height: 2rem;
+    color: inherit;
+    margin-bottom: auto;
   }
 
   .buscador-teaser__nombre {
     font-weight: var(--peso-semibold);
-    color: var(--color-titulo);
+    color: inherit;
     font-size: var(--texto-sm);
   }
 
   .buscador-teaser__conteo {
     font-size: var(--texto-sm);
-    color: var(--color-texto);
+    color: inherit;
+    opacity: 0.85;
   }
 
   @media (max-width: 767px) {
