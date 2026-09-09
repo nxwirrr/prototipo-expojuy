@@ -88,6 +88,15 @@ memoria descriptiva final.
   grillas de bloques y cortes rectos en general, con un único elemento curvo
   por pantalla como contrapunto (se aplicará puntualmente en la home y el
   mapa del predio, no en todos lados).
+- El gráfico del hero (`Hero.astro`) usaba una recreación propia de este
+  lenguaje (bloques + semicírculo) mientras no había un archivo real del
+  isologo. Al recibir el archivo oficial (`src/assets/images/expojuy-isologo.svg`),
+  se reemplazó el gráfico por el isologo real, inlineado directamente en el
+  `<svg>` del componente con sus colores oficiales exactos (`#00bdd1`,
+  `#756aaf`, `#74459a`, `#bba4ce`) — deliberadamente sin remapear a las
+  variables de color del sitio (`--color-turquesa`, etc.), porque son tonos
+  más apagados que la paleta de marca del sitio y usar los tokens hubiese
+  alterado el color oficial del logo.
 - Se evitan deliberadamente: tarjetas idénticas con sombra suave genérica,
   degradados decorativos, animaciones de entrada por sección, texto en
   mayúsculas sostenidas como etiqueta, y flechas "→" pegadas a botones.
